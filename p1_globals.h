@@ -1,0 +1,1 @@
+int g_string_memory;			/* number of bytes used in C-strings */
