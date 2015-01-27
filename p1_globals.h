@@ -1,3 +1,6 @@
+#ifndef P1_GLOBALS
+#define P1_GLOBALS
+
 #define BUFFER_SIZE 64
 #define SCAN_BUFFER_SIZE 63
 
@@ -9,3 +12,5 @@ int g_Record_count = 0;			/* number of records */
 int g_Container_count = 0;				/* number of Ordered_containers currently allocated */
 int g_Container_items_in_use = 0;		/* number of Ordered_container items currently in use */
 int g_Container_items_allocated = 0;	/* number of Ordered_container items currently allocated */
+
+#endif
