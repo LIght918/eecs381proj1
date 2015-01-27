@@ -3,6 +3,10 @@
 
 #include "Ordered_container.h"
 
+#define SIZE_FACTOR 2
+#define ALLOCATION_INCREASE 1
+#define INITIAL_ALLOCATION 3
+
 /* A complete type declaration for Ordered_container implemented as an array */
 struct Ordered_container {
 	OC_comp_fp_t comp_fun;	/* pointer to comparison function  */
@@ -11,23 +15,44 @@ struct Ordered_container {
 	int size;				/* number of items  currently in the array */
 };
 
+/* Enum for OC_apply functions */
+typedef enum { APPLY, APPLY_IF, APPLY_ARG, APPLY_ARG_IF, APPLY_INTERNAL
+} apply_enum;
 
-/* These global variables are used to monitor the memory usage of the Ordered_container */
-int g_Container_count;		/* number of Ordered_containers currently allocated */
-int g_Container_items_in_use;	/* number of Ordered_container items currently in use */
-int g_Container_items_allocated;	/* number of Ordered_container items currently allocated */
+/* Struct returned by OC_binary_search */
+struct Search_Result {
+	int found; /* whether or not the value was found */
+	int index; /* the index of the element if found, or the element directly after */
+}
 
 /*
-Private helper functions
+Private helper functions declarations
 */
 
+/* Searches for the specified element using the given comparison function */
+static struct Search_Result OC_binary_search(struct Ordered_container* c_ptr, void* data_ptr, OC_comp_fp_t comp_fun);
+
 /* Initialize the container to default values */
-void OC_initialize_container(struct Ordered_container* c_ptr)
-{
-	c_ptr->array = NULL;
-	c_ptr->allocation = 0;
-	c_ptr->size = 0;
-}
+static void OC_initialize_container(struct Ordered_container* c_ptr);
+
+/* Reallocate array */
+static void OC_reallocate_array(struct Ordered_container* c_ptr);
+
+/* Grabs the data ptr from the item directly preceding this item*/
+static int OC_take_value_from_left(void* item_ptr);
+
+/* Grabs the data ptr from the item directly after this item*/
+static int OC_take_value_from_right(void* item_ptr);
+
+/* Type of function used by OC_apply for APPLY_INTERNAL */
+typedef int(*OC_apply_internal_fp_t) (void* item_ptr);
+
+/* Helper function for OC_apply functions
+Performed on range [start, end), in order depending on reverse */
+static int OC_apply_helper(const struct Ordered_container* c_ptr, void* afp, void* arg_ptr, apply_enum apply_func, int start, int end, int reverse);
+
+/* Simplified call to OC_apply_helper */
+static int OC_apply_helper_simple(const struct Ordered_container* c_ptr, void* afp, void* arg_ptr, apply_enum apply_func);
 
 /*
 Functions for the entire container.
@@ -39,6 +64,7 @@ struct Ordered_container* OC_create_container(OC_comp_fp_t f_ptr)
 	struct Ordered_container *c_ptr = (Ordered_container*)malloc(sizeof(Ordered_container));
 	c_ptr->comp_fun = f_ptr;
 	OC_initialize_container(c_ptr);
+	g_Container_count++;
 	return c_ptr;
 }
 
@@ -47,14 +73,19 @@ deleting all pointed-to data before calling this function.
 After this call, the container pointer value must not be used again. */
 void OC_destroy_container(struct Ordered_container* c_ptr)
 {
+	g_Container_items_in_use -= c_ptr->size;
+	g_Container_items_allocated -= c_ptr->allocation;
 	free(c_ptr->array);
 	free(c_ptr);
+	g_Container_count--;
 }
 
 /* Delete all the items in the container and initialize it.
 Caller is responsible for deleting any pointed-to data first. */
 void OC_clear(struct Ordered_container* c_ptr)
 {
+	g_Container_items_in_use -= c_ptr->size;
+	g_Container_items_allocated -= c_ptr->allocation;
 	free(c_ptr->array);
 	OC_initialize_container(c_ptr);
 }
@@ -78,14 +109,16 @@ Functions for working with individual items in the container.
 /* Get the data object pointer from an item. */
 void* OC_get_data_ptr(const void* item_ptr)
 {
-	return *((void**)item_ptr)
+	return *((void**)item_ptr);
 }
 
 /* Delete the specified item.
 Caller is responsible for any deletion of the data pointed to by the item. */
 void OC_delete_item(struct Ordered_container* c_ptr, void* item_ptr)
 {
-
+	OC_apply_helper(c_ptr, OC_take_value_from_right, NULL, APPLY_INTERNAL, item_ptr - c_ptr->array, c_ptr->size - 1, 0);
+	c_ptr->size--;
+	g_Container_items_in_use--;
 }
 
 /*
@@ -98,7 +131,14 @@ the comparison function, the order of the new item relative to the existing item
 This function will not modify the pointed-to data. */
 void OC_insert(struct Ordered_container* c_ptr, const void* data_ptr)
 {
-
+	struct Search_Result result = OC_binary_search(c_ptr, data_ptr, c_ptr->comp_fun);
+	if (c_ptr->size == c_ptr->allocation)
+	{
+		OC_rellocate_array(c_ptr);
+	}
+	OC_apply_helper(c_ptr, OC_take_value_from_left, NULL, APPLY_INTERNAL, result.index + 1, c_ptr->size, 1);
+	c_ptr->array[result.index] = data_ptr;
+	g_Container_items_in_use++;
 }
 
 /* Return a pointer to an item that points to data equal to the data object pointed to by data_ptr,
@@ -108,7 +148,7 @@ NULL is returned if no matching item is found. If more than one matching item is
 unspecified which one is returned. The pointed-to data will not be modified. */
 void* OC_find_item(const struct Ordered_container* c_ptr, const void* data_ptr)
 {
-
+	return OC_find_item_arg(c_ptr, data_ptr, c_ptr->comp_fun);
 }
 
 /* Return a pointer to the item that points to data that matches the supplied argument given by arg_ptr
@@ -121,7 +161,15 @@ with the ordering produced by the comparison function specified when the contain
 if not, the result is undefined. */
 void* OC_find_item_arg(const struct Ordered_container* c_ptr, const void* arg_ptr, OC_find_item_arg_fp_t fafp)
 {
-
+	struct Search_Result result = OC_binary_search(c_ptr, data_ptr, c_ptr->comp_fun);
+	if (result.found)
+	{
+		return c_ptr->array[result.index];
+	}
+	else
+	{
+		return NULL;
+	}
 }
 
 /* Functions that traverse the items in the container, processing each item in order. */
@@ -130,7 +178,7 @@ void* OC_find_item_arg(const struct Ordered_container* c_ptr, const void* arg_pt
 The contents of the container cannot be modified. */
 void OC_apply(const struct Ordered_container* c_ptr, OC_apply_fp_t afp)
 {
-
+	OC_apply_helper_simple(c_ptr, afp, NULL, APPLY);
 }
 
 /* Apply the supplied function to the data pointer in each item in the container.
@@ -138,7 +186,7 @@ If the function returns non-zero, the iteration is terminated, and that value
 returned. Otherwise, zero is returned. The contents of the container cannot be modified. */
 int OC_apply_if(const struct Ordered_container* c_ptr, OC_apply_if_fp_t afp)
 {
-
+	return OC_apply_helper_simple(c_ptr, afp, NULL, APPLY_IF);
 }
 
 /* Apply the supplied function to the data pointer in each item in the container;
@@ -146,7 +194,7 @@ the function takes a second argument, which is the supplied void pointer.
 The contents of the container cannot be modified. */
 void OC_apply_arg(const struct Ordered_container* c_ptr, OC_apply_arg_fp_t afp, void* arg_ptr)
 {
-
+	OC_apply_helper_simple(c_ptr, afp, arg_ptr, APPLY);
 }
 
 /* Apply the supplied function to the data pointer in each item in the container;
@@ -155,7 +203,123 @@ If the function returns non-zero, the iteration is terminated, and that value
 returned. Otherwise, zero is returned. The contents of the container cannot be modified */
 int OC_apply_if_arg(const struct Ordered_container* c_ptr, OC_apply_if_arg_fp_t afp, void* arg_ptr)
 {
+	return OC_apply_helper_simple(c_ptr, afp, arg_ptr, APPLY);
+}
 
+/*
+Private helper functions
+*/
+
+/* Searches for the specified element using the given comparison function */
+static struct Search_Result OC_binary_search(struct Ordered_container* c_ptr, void* data_ptr, OC_comp_fp_t comp_fun)
+{
+	struct Search_Result result;
+	int left = 0;
+	int right = c_ptr->size - 1;
+	int middle = (left + right) / 2;
+	result.found = false;
+	while (left <= right)
+	{
+		int comparison = comp_fun(array[middle], data_ptr);
+		if (comparison < 0)
+		{
+			left = middle + 1;
+		}
+		else if (comparison == 0)
+		{
+			result.found = true;
+			break;
+		}
+		else
+		{
+			right = middle - 1;
+		}
+		middle = (left + right) / 2;
+	}
+	result.index = middle;
+	return result;
+}
+
+/* Initialize the container to default values */
+static void OC_initialize_container(struct Ordered_container* c_ptr)
+{
+	c_ptr->allocation = INITIAL_ALLOCATION;
+	g_Container_items_allocated += c_ptr->allocation;
+	c_ptr->size = 0;
+	c_ptr->array = calloc(c_ptr->allocation, sizeof(void**));
+}
+
+/* Reallocate array */
+static void OC_reallocate_array(struct Ordered_container* c_ptr)
+{
+	void** old_array = c_ptr->array;
+	int i;
+	int new_allocation = (c_ptr->allocation + ALLOCATION_INCREASE) * SIZE_FACTOR;
+	g_Container_items_allocated += new_allocation - c_ptr->allocation;
+	c_ptr->allocation = new_allocation;
+	c_ptr->array = calloc(c_ptr->allocation, sizeof(void**));
+	for (i = 0; i < c_ptr->size; i++)
+	{
+		c_ptr->array[i] = old_array[i];
+	}
+	free(old_array);
+}
+
+/* Grabs the data ptr from the item directly preceding this item*/
+static int OC_take_value_from_left(void* item_ptr)
+{
+	item_ptr = *((void**)item_ptr - 1);
+}
+
+/* Grabs the data ptr from the item directly after this item*/
+static int OC_take_value_from_right(void* item_ptr)
+{
+	item_ptr = *((void**)item_ptr + 1);
+}
+
+/* Helper function for OC_apply functions
+Performed on range [start, end), in order depending on reverse */
+static int OC_apply_helper(const struct Ordered_container* c_ptr, void* afp, void* arg_ptr, apply_enum apply_func, int start, int end, int reverse)
+{
+	int i;
+	for (i = (reverse ? end : start); (reverse ? i >= 0 : i < end); (reverse ? i-- : i++))
+	{
+		int function_return;
+		void **item_ptr = c_ptr->array[i];
+		switch (apply_func)
+		{
+		case APPLY:
+			((OC_apply_fp_t)afp)(OC_get_data_ptr(item_ptr));
+			break;
+		case APPLY_IF:
+			function_return = ((OC_apply_if_fp_t)afp)(OC_get_data_ptr(item_ptr));
+			if (function_return)
+			{
+				return function_return;
+			}
+			break;
+		case APPLY_ARG:
+			((OC_apply_arg_fp_t)afp)(OC_get_data_ptr(item_ptr), arg_ptr);
+			break;
+		case APPLY_ARG_IF:
+			function_return = ((OC_apply_arg_if_fp_t)afp)(OC_get_data_ptr(item_ptr), arg_ptr);
+			if (function_return)
+			{
+				return function_return;
+			}
+			break;
+		case APPLY_INTERNAL:
+			((OC_apply_internal_fp_t)afp)(item_ptr);
+			break;
+		}
+	}
+	return 0;
+}
+
+/* Simplified call to OC_apply_helper */
+static int OC_apply_helper_simple(const struct Ordered_container* c_ptr, void* afp, void* arg_ptr, apply_enum apply_func)
+{
+	return OC_apply_helper(c_ptr, afp, arg_ptr, apply_func, comp_func, 0, c_ptr->size, 0);
 }
 
 #endif
