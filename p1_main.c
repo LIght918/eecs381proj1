@@ -4,6 +4,7 @@
 #include "Collection.h"
 #include "Record.h"
 #include "Ordered_container.h"
+#include "Utility.h"
 
 /* Compare collections by their name */
 int collection_compare(const struct Collection *first_collection, const struct Collection *second_collection);
