@@ -113,7 +113,7 @@ int main()
 							if (!OC_empty(library_title))
 							{
 								printf("Library contains %d records:\n");
-								OC_apply(library_title, (OC_apply)print_Record);
+								OC_apply(library_title, record_print);
 							}
 							else
 							{

@@ -5,6 +5,9 @@
 #include "p1_globals.h"
 #include <stdio.h>
 
+/* print a record */
+void record_print(const void* record);
+
 /* Compare records by their titles */
 int record_compare_title(const void* first_record, const void* second_record);
 
