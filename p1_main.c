@@ -444,7 +444,7 @@ struct Record * read_id_get_record(struct Ordered_container *library_id)
 	if (scanf("%d", id) != 1)
 	{
 		integer_read_error();
-		break;
+		return NULL;
 	}
 	item = OC_find_item_arg(library_id, &id, record_id_compare);
 	if (!item)
