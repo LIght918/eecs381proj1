@@ -7,10 +7,10 @@
 #include "Utility.h"
 
 /* Compare collections by their name */
-int collection_compare(const struct Collection *first_collection, const struct Collection *second_collection);
+int collection_compare(const void* first_collection, const void* second_collection);
 
 /* Compares a collection's title with the given title */
-int collection_name_compare(const char * name, const struct Collection *collection);
+int collection_name_compare(const void* name, const void* collection);
 
 /* Used to print all members of a container containing collections */
 void print_all_collections(struct Collection *collection);
@@ -406,15 +406,15 @@ int main()
 }
 
 /* Compare collections by their name */
-int collection_compare(const struct Collection *first_collection, const struct Collection *second_collection)
+int collection_compare(const void* first_collection, const void* second_collection)
 {
 	return strcomp(get_Collection_name(first_collection), get_Collection_name(second_collection));
 }
 
 /* Compares a collection's title with the given title */
-int collection_name_compare(const char * name, const struct Collection *collection)
+int collection_name_compare(const void* name, const void* collection)
 {
-	return strcomp(name, get_Collection_name(collection));
+	return strcomp((const char*)name, get_Collection_name((const struct Collection*)collection));
 }
 
 /* Read in title and get record from library */
