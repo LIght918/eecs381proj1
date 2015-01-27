@@ -16,13 +16,13 @@ int collection_name_compare(const char * name, const struct Collection *collecti
 void print_all_collections(struct Collection *collection);
 
 /* Read in title and get record from library */
-struct Record * read_title_get_record(Ordered_container *library_title);
+struct Record * read_title_get_record(struct Ordered_container *library_title);
 
 /* Read record id and get record from library */
-struct Record * read_id_get_record(Ordered_container *library_id);
+struct Record * read_id_get_record(struct Ordered_container *library_id);
 
 /* Read in name and get collection from library */
-struct Collection * read_name_get_collection(Ordered_container *catalog);
+struct Collection * read_name_get_collection(struct Ordered_container *catalog);
 
 /* Return non-zero if there are no members, 0 if there are members */
 int Collection_not_empty(const struct Collection* collection_ptr);
@@ -31,10 +31,10 @@ int Collection_not_empty(const struct Collection* collection_ptr);
 void free_member(void * addr);
 
 /* Deallocates all members and clears the container*/
-void deallocate_and_clear(Ordered_container *container);
+void deallocate_and_clear(struct Ordered_container *container);
 
 /* Clear all data */
-void clear_all(Ordered_container *catalog, Ordered_container *library_title, Ordered_container *library_id);
+void clear_all(struct Ordered_container *catalog, struct Ordered_container *library_title, struct Ordered_container *library_id);
 
 /* Action Object input error message */
 void action_object_input_error();
@@ -418,7 +418,7 @@ int collection_name_compare(const char * name, const struct Collection *collecti
 }
 
 /* Read in title and get record from library */
-struct Record * read_title_get_record(Ordered_container *library_title)
+struct Record * read_title_get_record(struct Ordered_container *library_title)
 {
 	char title_buffer[BUFFER_SIZE];
 	char *title = read_title(title_buffer, stdin);
@@ -437,7 +437,7 @@ struct Record * read_title_get_record(Ordered_container *library_title)
 }
 
 /* Read record id and get record from library */
-struct Record * read_id_get_record(Ordered_container *library_id)
+struct Record * read_id_get_record(struct Ordered_container *library_id)
 {
 	int id;
 	struct Record *item;
@@ -455,7 +455,7 @@ struct Record * read_id_get_record(Ordered_container *library_id)
 }
 
 /* Read in name and get collection from library */
-struct Collection * read_name_get_collection(Ordered_container *catalog)
+struct Collection * read_name_get_collection(struct Ordered_container *catalog)
 {
 	char name[BUFFER_SIZE];
 	struct Collection *collection;
@@ -492,7 +492,7 @@ void deallocate_and_clear(Ordered_container *container)
 }
 
 /* Clear all data */
-void clear_all(Ordered_container *catalog, Ordered_container *library_title, Ordered_container *library_id)
+void clear_all(struct Ordered_container *catalog, struct Ordered_container *library_title, struct Ordered_container *library_id)
 {
 	deallocate_and_clear(catalog);
 	deallocate_and_clear(library_title);
