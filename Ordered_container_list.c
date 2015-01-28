@@ -8,7 +8,6 @@
 
 #define CONTAINER_GLOBAL_ADD_ONE 1
 #define CONTAINER_GLOBAL_MINUS_ONE -1
-#define INTERNAL_TRUE (void*)(&1)
 
 /* struct LL_Node structure declaration. This declaration is local to this file. 
 This is a two-way or doubly-linked list. Each node has a pointer to the previous 
@@ -56,13 +55,13 @@ static void OC_insert_after(struct Ordered_container* c_ptr, void* item_ptr, con
 static void OC_insert_before(struct Ordered_container* c_ptr, void* item_ptr, const void* data_ptr);
 
 /* Checks if item_ptr's data is equal to arg_ptr, and if so, deletes */
-static void *OC_check_and_delete(struct Ordered_container* c_ptr, void* item_ptr, OC_comp_fp_t comp_func, const void* arg_ptr);
+static int OC_check_and_delete(struct Ordered_container* c_ptr, void* item_ptr, OC_comp_fp_t comp_func, const void* arg_ptr);
 
 /* Checks if item_ptr's data is equal to or lesser than arg_ptr, and if so, inserts it before */
-static void *OC_check_and_insert(struct Ordered_container* c_ptr, void* item_ptr, OC_comp_fp_t comp_func, const void* arg_ptr);
+static int OC_check_and_insert(struct Ordered_container* c_ptr, void* item_ptr, OC_comp_fp_t comp_func, const void* arg_ptr);
 
 /* Checks if item_ptr's data is equal to arg_ptr, and if so, returns item_ptr */
-static void *OC_check_and_find(struct Ordered_container* c_ptr, void* item_ptr, OC_comp_fp_t comp_func, const void* arg_ptr);
+static int OC_check_and_find(struct Ordered_container* c_ptr, void* item_ptr, OC_comp_fp_t comp_func, const void* arg_ptr);
 
 /* Initialize data for LL_Node* given */
 static void OC_initialize_node(struct LL_Node* node_ptr, struct LL_Node* prev, struct LL_Node* next, const void* data_ptr);
@@ -71,10 +70,10 @@ static void OC_initialize_node(struct LL_Node* node_ptr, struct LL_Node* prev, s
 typedef void(*OC_apply_template) (void);
 
 /* Type of function used by OC_apply for APPLY_INTERNAL */
-typedef void *(*OC_apply_internal_fp_t) (struct Ordered_container *c_ptr, void* item_ptr, OC_comp_fp_t comp_func, const void* arg_ptr);
+typedef int(*OC_apply_internal_fp_t) (struct Ordered_container *c_ptr, void* item_ptr, OC_comp_fp_t comp_func, const void* arg_ptr);
 
 /* Helper function for OC_apply functions */
-static int *OC_apply_helper(const struct Ordered_container* c_ptr, OC_apply_template afp, void* arg_ptr, apply_enum apply_func, OC_comp_fp_t comp_func);
+static int OC_apply_helper(const struct Ordered_container* c_ptr, OC_apply_template afp, void* arg_ptr, apply_enum apply_func, OC_comp_fp_t comp_func);
 
 /* Deallocate all nodes */
 static void OC_deallocate_all(struct Ordered_container *c_ptr);
@@ -180,8 +179,8 @@ the comparison function, the order of the new item relative to the existing item
 This function will not modify the pointed-to data. */
 void OC_insert(struct Ordered_container* c_ptr, const void* data_ptr)
 {
-	int *is_inserted = OC_apply_helper(c_ptr, (OC_apply_template)OC_check_and_insert, (void*)data_ptr, APPLY_INTERNAL, c_ptr->comp_func);
-	if (!is_inserted)
+	int is_inserted = OC_apply_helper(c_ptr, (OC_apply_template)OC_check_and_insert, (void*)data_ptr, APPLY_INTERNAL, c_ptr->comp_func);
+	if (is_inserted == 0)
 	{
 		OC_insert_after(c_ptr, c_ptr->last, data_ptr);
 	}
@@ -195,7 +194,7 @@ NULL is returned if no matching item is found. If more than one matching item is
 unspecified which one is returned. The pointed-to data will not be modified. */
 void* OC_find_item(const struct Ordered_container* c_ptr, const void* data_ptr)
 {
-	return (void*)OC_apply_helper(c_ptr, (OC_apply_template)OC_check_and_find, (void*)data_ptr, APPLY_INTERNAL, c_ptr->comp_func);
+	return OC_apply_helper(c_ptr, (OC_apply_template)OC_check_and_find, (void*)data_ptr, APPLY_INTERNAL, c_ptr->comp_func);
 }
 
 /* Return a pointer to the item that points to data that matches the supplied argument given by arg_ptr
@@ -208,7 +207,7 @@ with the ordering produced by the comparison function specified when the contain
 if not, the result is undefined. */
 void* OC_find_item_arg(const struct Ordered_container* c_ptr, const void* arg_ptr, OC_find_item_arg_fp_t fafp)
 {
-	return (void*)OC_apply_helper(c_ptr, (OC_apply_template)OC_check_and_find, (void*)arg_ptr, APPLY_INTERNAL, fafp);
+	return OC_apply_helper(c_ptr, (OC_apply_template)OC_check_and_find, data_ptr, APPLY_INTERNAL, fafp);
 }
 
 /* Functions that traverse the items in the container, processing each item in order. */
@@ -225,7 +224,7 @@ If the function returns non-zero, the iteration is terminated, and that value
 returned. Otherwise, zero is returned. The contents of the container cannot be modified. */
 int OC_apply_if(const struct Ordered_container* c_ptr, OC_apply_if_fp_t afp)
 {
-	return *OC_apply_helper(c_ptr, (OC_apply_template)afp, NULL, APPLY_IF, NULL);
+	return OC_apply_helper(c_ptr, (OC_apply_template)afp, NULL, APPLY_IF, NULL);
 }
 
 /* Apply the supplied function to the data pointer in each item in the container;
@@ -242,7 +241,7 @@ If the function returns non-zero, the iteration is terminated, and that value
 returned. Otherwise, zero is returned. The contents of the container cannot be modified */
 int OC_apply_if_arg(const struct Ordered_container* c_ptr, OC_apply_if_arg_fp_t afp, void* arg_ptr)
 {
-	return *OC_apply_helper(c_ptr, (OC_apply_template)afp, arg_ptr, APPLY_ARG_IF, NULL);
+	return OC_apply_helper(c_ptr, (OC_apply_template)afp, arg_ptr, APPLY_ARG_IF, NULL);
 }
 
 /*
@@ -310,35 +309,35 @@ static void OC_insert_before(struct Ordered_container* c_ptr, void* item_ptr, co
 }
 
 /* Checks if item_ptr's data is equal to arg_ptr, and if so, deletes */
-static void *OC_check_and_delete(struct Ordered_container* c_ptr, void* item_ptr, OC_comp_fp_t comp_func, const void* arg_ptr)
+static int OC_check_and_delete(struct Ordered_container* c_ptr, void* item_ptr, OC_comp_fp_t comp_func, const void* arg_ptr)
 {
 	if (comp_func(OC_get_data_ptr(item_ptr), arg_ptr) == 0)
 	{
 		OC_delete_item(c_ptr, item_ptr);
-		return INTERNAL_TRUE;
+		return 1;
 	}
-	return NULL;
+	return 0;
 }
 
 /* Checks if item_ptr's data is equal to or lesser than arg_ptr, and if so, inserts it before */
-static void *OC_check_and_insert(struct Ordered_container* c_ptr, void* item_ptr, OC_comp_fp_t comp_func, const void* arg_ptr)
+static int OC_check_and_insert(struct Ordered_container* c_ptr, void* item_ptr, OC_comp_fp_t comp_func, const void* arg_ptr)
 {
 	if (comp_func(OC_get_data_ptr(item_ptr), arg_ptr) >= 0)
 	{
 		OC_insert_before(c_ptr, item_ptr, arg_ptr);
-		return INTERNAL_TRUE;
+		return 1;
 	}
-	return NULL;
+	return 0;
 }
 
 /* Checks if item_ptr's data is equal to arg_ptr, and if so, returns item_ptr */
-static void *OC_check_and_find(struct Ordered_container* c_ptr, void* item_ptr, OC_comp_fp_t comp_func, const void* arg_ptr)
+static int OC_check_and_find(struct Ordered_container* c_ptr, void* item_ptr, OC_comp_fp_t comp_func, const void* arg_ptr)
 {
 	if (comp_func(OC_get_data_ptr(item_ptr), arg_ptr) == 0)
 	{
-		return item_ptr;
+		return (int)item_ptr;
 	}
-	return NULL;
+	return 0;
 }
 
 /* Initialize data for LL_Node* given */
@@ -350,7 +349,7 @@ static void OC_initialize_node(struct LL_Node* node_ptr, struct LL_Node* prev, s
 }
 
 /* Helper function for OC_apply functions */
-static int *OC_apply_helper(const struct Ordered_container* c_ptr, OC_apply_template afp, void* arg_ptr, apply_enum apply_func, OC_comp_fp_t comp_func)
+static int OC_apply_helper(const struct Ordered_container* c_ptr, OC_apply_template afp, void* arg_ptr, apply_enum apply_func, OC_comp_fp_t comp_func)
 {
 	struct LL_Node *node_ptr = c_ptr->first;
 	while (node_ptr != NULL)
@@ -366,7 +365,7 @@ static int *OC_apply_helper(const struct Ordered_container* c_ptr, OC_apply_temp
 			function_return = ((OC_apply_if_fp_t)afp)(OC_get_data_ptr(node_ptr));
 			if (function_return)
 			{
-				return &function_return;
+				return function_return;
 			}
 			break;
 		case APPLY_ARG:
@@ -376,20 +375,20 @@ static int *OC_apply_helper(const struct Ordered_container* c_ptr, OC_apply_temp
 			function_return = ((OC_apply_arg_if_fp_t)afp)(OC_get_data_ptr(node_ptr), arg_ptr);
 			if (function_return)
 			{
-				return &function_return;
+				return function_return;
 			}
 			break;
 		case APPLY_INTERNAL:
 			function_return = ((OC_apply_internal_fp_t)afp)(c_ptr, node_ptr, comp_func, arg_ptr);
 			if (function_return)
 			{
-				return (int *)function_return;
+				return function_return;
 			}
 			break;
 		}
 		node_ptr = next_node_ptr;
 	}
-	return NULL;
+	return 0;
 }
 
 /* Deallocate all nodes */
