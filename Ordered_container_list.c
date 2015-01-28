@@ -327,7 +327,7 @@ static int OC_check_and_delete(const struct Ordered_container* c_ptr, void* item
 {
 	if (comp_func(OC_get_data_ptr(item_ptr), arg_ptr) == 0)
 	{
-		OC_delete_item(c_ptr, item_ptr);
+		OC_delete_item((struct Ordered_container*)c_ptr, item_ptr);
 		return 1;
 	}
 	return 0;
@@ -338,7 +338,7 @@ static int OC_check_and_insert(const struct Ordered_container* c_ptr, void* item
 {
 	if (comp_func(OC_get_data_ptr(item_ptr), arg_ptr) >= 0)
 	{
-		OC_insert_before(c_ptr, item_ptr, arg_ptr);
+		OC_insert_before((struct Ordered_container*)c_ptr, item_ptr, arg_ptr);
 		return 1;
 	}
 	return 0;
@@ -404,7 +404,7 @@ static void *OC_find_helper(const struct Ordered_container* c_ptr, OC_find_fp_t 
 	while (node_ptr != NULL)
 	{
 		struct LL_Node *next_node_ptr = node_ptr->next;
-		int function_return = afp(c_ptr, node_ptr, comp_func, arg_ptr);
+		void *function_return = afp(c_ptr, node_ptr, comp_func, arg_ptr);
 		if (function_return)
 		{
 			return function_return;
@@ -417,7 +417,7 @@ static void *OC_find_helper(const struct Ordered_container* c_ptr, OC_find_fp_t 
 /* Deallocate all nodes */
 static void OC_deallocate_all(struct Ordered_container *c_ptr)
 {
-	OC_apply_helper(c_ptr, OC_deallocate_item, NULL, APPLY_INTERNAL, NULL);
+	OC_apply_helper(c_ptr, (OC_apply_template_fp_t)OC_deallocate_item, NULL, APPLY_INTERNAL, NULL);
 }
 
 #endif
