@@ -590,7 +590,7 @@ void free_member(void * addr)
 }
 
 /* Deallocates all members and clears the container*/
-void deallocate_and_clear(Ordered_container *container)
+void deallocate_and_clear(struct Ordered_container *container)
 {
 	OC_apply(container, free_member);
 	OC_clear(container);
@@ -609,17 +609,19 @@ void clear_all(struct Ordered_container *catalog, struct Ordered_container *libr
 FILE * read_filename_open_file(char * mode)
 {
 	char filename[BUFFER_SIZE];
+	FILE *file;
 	if (scanf(SCAN_BUFFER, filename) != 1)
 	{
 		file_open_error();
-		break;
+		return NULL;
 	}
-	infile = fopen(outfile, mode);
-	if (!infile)
+	file = fopen(outfile, mode);
+	if (!file)
 	{
 		file_open_error();
-		break;
+		return NULL;
 	}
+	return file;
 }
 
 /* Action Object input error message */
