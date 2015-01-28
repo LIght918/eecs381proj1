@@ -82,7 +82,7 @@ Functions for the entire container.
 /* Create an empty container using the supplied comparison function, and return the pointer to it. */
 struct Ordered_container* OC_create_container(OC_comp_fp_t f_ptr)
 {
-	struct Ordered_container *c_ptr = malloc(sizeof(Ordered_container));
+	struct Ordered_container *c_ptr = malloc(sizeof(struct Ordered_container));
 	c_ptr->comp_fun = f_ptr;
 	OC_initialize_container(c_ptr);
 	g_Container_count++;
@@ -128,14 +128,14 @@ Functions for working with individual items in the container.
 /* Get the data object pointer from an item. */
 void* OC_get_data_ptr(const void* item_ptr)
 {
-	return ((LL_Node*)item_ptr)->data_ptr;
+	return ((struct LL_Node*)item_ptr)->data_ptr;
 }
 
 /* Delete the specified item.
 Caller is responsible for any deletion of the data pointed to by the item. */
 void OC_delete_item(struct Ordered_container* c_ptr, void* item_ptr)
 {
-	struct LL_Node *node_ptr = (LL_Node*)item_ptr;
+	struct LL_Node *node_ptr = (struct LL_Node*)item_ptr;
 	if (node_ptr->next == NULL && node_ptr->prev == NULL)
 	{
 		/* container must now be empty */
@@ -270,8 +270,8 @@ static int OC_deallocate_item(struct Ordered_container* c_ptr, void* item_ptr, O
 /* Insert node after given node */
 static void OC_insert_after(struct Ordered_container* c_ptr, void* item_ptr, const void* data_ptr)
 {
-	struct LL_Node *node_ptr = (LL_Node*)item_ptr;
-	struct LL_Node *new_node = malloc(sizeof(LL_Node));
+	struct LL_Node *node_ptr = (struct LL_Node*)item_ptr;
+	struct LL_Node *new_node = malloc(sizeof(struct LL_Node));
 	if (node_ptr->next == NULL)
 	{
 		OC_initialize_node(new_node, node_ptr, NULL, data_ptr);
@@ -289,8 +289,8 @@ static void OC_insert_after(struct Ordered_container* c_ptr, void* item_ptr, con
 /* Insert node before given node */
 static void OC_insert_before(struct Ordered_container* c_ptr, void* item_ptr, const void* data_ptr)
 {
-	struct LL_Node *node_ptr = (LL_Node*)item_ptr;
-	struct LL_Node *new_node = malloc(sizeof(LL_Node));
+	struct LL_Node *node_ptr = (struct LL_Node*)item_ptr;
+	struct LL_Node *new_node = malloc(sizeof(struct LL_Node));
 	if (node_ptr->prev == NULL)
 	{
 		OC_initialize_node(new_node, NULL, node_ptr, data_ptr);
