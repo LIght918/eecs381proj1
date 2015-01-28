@@ -31,6 +31,7 @@ struct Record* create_Record(const char* medium, const char* title)
 	record->rating = 0;
 	record->ID = next_record_id++;
 	g_Record_count++;
+	return record;
 }
 
 /* Destroy a Record object

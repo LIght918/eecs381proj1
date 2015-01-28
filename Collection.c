@@ -17,14 +17,14 @@ struct Collection {
 extern int g_Collection_count;		/* global to store number of collections */
 
 /* Used to save all members of the collection */
-void save_one_record(struct Record *record, FILE *current_file);
+void save_one_record(void* record, void* current_file);
 
 /* Create a Collection object.
 This is the only function that allocates memory for a Collection
 and the contained data. */
 struct Collection* create_Collection(const char* name)
 {
-	struct Collection *collection = malloc(sizeof(Collection));
+	struct Collection *collection = malloc(sizeof(struct Collection));
 	int name_len = strlen(name) + 1;
 	g_string_memory += name_len;
 	collection->name = strcpy(malloc(name_len), name);
@@ -71,7 +71,7 @@ int add_Collection_member(struct Collection* collection_ptr, const struct Record
 /* Return non-zero if the record is a member, zero if not. */
 int is_Collection_member_present(const struct Collection* collection_ptr, const struct Record* record_ptr)
 {
-	return OC_find_item(collection_ptr->members, record_ptr);
+	return OC_find_item(collection_ptr->members, record_ptr) != 0;
 }
 
 /* Remove a member; return non-zero if not present, zero if was present. */
@@ -79,7 +79,7 @@ int remove_Collection_member(struct Collection* collection_ptr, const struct Rec
 {
 	if (is_Collection_member_present(collection_ptr, record_ptr))
 	{
-		OC_delete_item(collection_ptr->members, record_ptr);
+		OC_delete_item(collection_ptr->members, (void*)record_ptr);
 		return 0;
 	}
 	return 1;
