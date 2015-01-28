@@ -25,7 +25,7 @@ struct Record * read_id_get_record(struct Ordered_container *library_id);
 struct Collection * read_name_get_collection(struct Ordered_container *catalog);
 
 /* Return non-zero if there are no members, 0 if there are members */
-int Collection_not_empty(const struct Collection* collection_ptr);
+int Collection_not_empty(const void* collection_ptr);
 
 /* Used to deallocate all members of an Ordered container */
 void free_member(void * addr);
@@ -548,9 +548,9 @@ struct Collection * read_name_get_collection(struct Ordered_container *catalog)
 }
 
 /* Return non-zero if there are no members, 0 if there are members */
-int Collection_not_empty(const struct Collection* collection_ptr)
+int Collection_not_empty(const void* collection_ptr)
 {
-	return !Collection_empty(collection_ptr);
+	return !Collection_empty((const struct Collection *)collection_ptr);
 }
 
 /* Used to deallocate all members of an Ordered container */
