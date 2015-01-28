@@ -53,16 +53,16 @@ void clear_all(struct Ordered_container *catalog, struct Ordered_container *libr
 FILE * read_filename_open_file(char * mode);
 
 /* Action Object input error message */
-void action_object_input_error();
+void action_object_input_error(void);
 
 /* Title read error message */
-void title_read_error();
+void title_read_error(void);
 
 /* Integer read error message */
-void integer_read_error();
+void integer_read_error(void);
 
 /* File open error message */
-void file_open_error();
+void file_open_error(void);
 
 /* File invalid error message and closes file */
 void file_invalid_error(FILE *file);
@@ -625,25 +625,25 @@ FILE * read_filename_open_file(char * mode)
 }
 
 /* Action Object input error message */
-void action_object_input_error()
+void action_object_input_error(void)
 {
 	printf("Unrecognized command!\n");
 }
 
 /* Title read error message */
-void title_read_error()
+void title_read_error(void)
 {
 	printf("Could not read a title!\n");
 }
 
 /* Integer read error message */
-void integer_read_error()
+void integer_read_error(void)
 {
 	printf("Could not read an integer value!\n");
 }
 
 /* File open error message */
-void file_open_error()
+void file_open_error(void)
 {
 	printf("Could not open file!\n");
 }
