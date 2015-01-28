@@ -12,11 +12,14 @@ int collection_compare(const void* first_collection, const void* second_collecti
 /* Compares a collection's title with the given title */
 int collection_name_compare(const void* name, const void* collection);
 
-/* print a collection */
+/* Print a collection */
 void collection_print(void* collection);
 
 /* Used to print all members of a container containing collections */
 void print_all_collections(struct Ordered_container *c_ptr);
+
+/* Checks collection if it contains member */
+int collection_contains(const void* collection_ptr, const void* record_ptr);
 
 /* Read in title and get record from library */
 struct Record * read_title_get_record(struct Ordered_container *library_title);
@@ -28,7 +31,7 @@ struct Record * read_id_get_record(struct Ordered_container *library_id);
 struct Collection * read_name_get_collection(struct Ordered_container *catalog);
 
 /* Return non-zero if there are no members, 0 if there are members */
-int Collection_not_empty(const void* collection_ptr);
+int Collection_not_empty(void* collection_ptr);
 
 /* Used to deallocate all members of an Ordered container */
 void free_member(void * addr);
@@ -272,7 +275,7 @@ int main()
 							{
 								break;
 							}
-							is_member = OC_apply_if_arg(catalog, is_Collection_member_present, item);
+							is_member = OC_apply_if_arg(catalog, collection_contains, item);
 							if (is_member)
 							{
 								printf("Cannot delete a record that is a member of a collection!\n");
@@ -495,7 +498,7 @@ int collection_name_compare(const void* name, const void* collection)
 	return strcomp((const char*)name, get_Collection_name((const struct Collection*)collection));
 }
 
-/* print a collection */
+/* Print a collection */
 void collection_print(void* collection)
 {
 	print_Collection((struct Collection *)collection);
@@ -505,6 +508,12 @@ void collection_print(void* collection)
 void print_all_collections(struct Ordered_container *c_ptr)
 {
 	OC_apply(c_ptr, collection_print);
+}
+
+/* Checks collection if it contains member */
+int collection_contains(const void* collection_ptr, const void* record_ptr)
+{
+	return is_Collection_member_present((const struct Collection *) collection_ptr, (const struct Record *)record_ptr);
 }
 
 /* Read in title and get record from library */
@@ -563,7 +572,7 @@ struct Collection * read_name_get_collection(struct Ordered_container *catalog)
 }
 
 /* Return non-zero if there are no members, 0 if there are members */
-int Collection_not_empty(const void* collection_ptr)
+int Collection_not_empty(void* collection_ptr)
 {
 	return !Collection_empty((const struct Collection *)collection_ptr);
 }
