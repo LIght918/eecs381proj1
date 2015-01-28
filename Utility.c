@@ -3,7 +3,7 @@
 #include "p1_globals.h"
 
 /* print a record */
-void record_print(const void* record)
+void record_print(void* record)
 {
 	print_Record((struct Record *)record);
 }
