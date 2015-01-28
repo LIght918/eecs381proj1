@@ -54,6 +54,9 @@ static void OC_insert_after(struct Ordered_container* c_ptr, void* item_ptr, con
 /* Insert node before given node */
 static void OC_insert_before(struct Ordered_container* c_ptr, void* item_ptr, const void* data_ptr);
 
+/* Initialize data for LL_Node* given */
+static void OC_initialize_node(struct LL_Node* node_ptr, struct LL_Node* prev, struct LL_Node* next, const void* data_ptr);
+
 /* Checks if item_ptr's data is equal to arg_ptr, and if so, deletes */
 static int OC_check_and_delete(struct Ordered_container* c_ptr, void* item_ptr, OC_comp_fp_t comp_func, const void* arg_ptr);
 
@@ -62,9 +65,6 @@ static int OC_check_and_insert(struct Ordered_container* c_ptr, void* item_ptr, 
 
 /* Checks if item_ptr's data is equal to arg_ptr, and if so, returns item_ptr */
 static void *OC_check_and_find(struct Ordered_container* c_ptr, void* item_ptr, OC_comp_fp_t comp_func, const void* arg_ptr);
-
-/* Initialize data for LL_Node* given */
-static void OC_initialize_node(struct LL_Node* node_ptr, struct LL_Node* prev, struct LL_Node* next, const void* data_ptr);
 
 /* Type of function used to pass function pointers around OC_apply functions */
 typedef void(*OC_apply_template_fp_t) (void);
@@ -314,6 +314,14 @@ static void OC_insert_before(struct Ordered_container* c_ptr, void* item_ptr, co
 	}
 }
 
+/* Initialize data for LL_Node* given */
+static void OC_initialize_node(struct LL_Node* node_ptr, struct LL_Node* prev, struct LL_Node* next, const void* data_ptr)
+{
+	node_ptr->prev = prev;
+	node_ptr->next = next;
+	node_ptr->data_ptr = (void*)data_ptr;
+}
+
 /* Checks if item_ptr's data is equal to arg_ptr, and if so, deletes */
 static int OC_check_and_delete(struct Ordered_container* c_ptr, void* item_ptr, OC_comp_fp_t comp_func, const void* arg_ptr)
 {
@@ -346,14 +354,6 @@ static void *OC_check_and_find(struct Ordered_container* c_ptr, void* item_ptr, 
 	return 0;
 }
 
-/* Initialize data for LL_Node* given */
-static void OC_initialize_node(struct LL_Node* node_ptr, struct LL_Node* prev, struct LL_Node* next, const void* data_ptr)
-{
-	node_ptr->prev = prev;
-	node_ptr->next = next;
-	node_ptr->data_ptr = data_ptr;
-}
-
 /* Helper function for OC_apply functions */
 static int OC_apply_helper(const struct Ordered_container* c_ptr, OC_apply_template_fp_t afp, void* arg_ptr, apply_enum apply_func, OC_comp_fp_t comp_func)
 {
@@ -378,7 +378,7 @@ static int OC_apply_helper(const struct Ordered_container* c_ptr, OC_apply_templ
 			((OC_apply_arg_fp_t)afp)(OC_get_data_ptr(node_ptr), arg_ptr);
 			break;
 		case APPLY_ARG_IF:
-			function_return = ((OC_apply_arg_if_fp_t)afp)(OC_get_data_ptr(node_ptr), arg_ptr);
+			function_return = ((OC_apply_if_arg_fp_t)afp)(OC_get_data_ptr(node_ptr), arg_ptr);
 			if (function_return)
 			{
 				return function_return;
