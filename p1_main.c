@@ -129,7 +129,7 @@ int main()
 							if (!OC_empty(library_title))
 							{
 								printf("Library contains %d records:\n", OC_get_size(library_title));
-								print_all_records(library_title);
+								OC_apply(library_title, record_print);
 							}
 							else
 							{

@@ -8,9 +8,6 @@
 /* Print a record */
 void record_print(void* record);
 
-/* Print all records in a collection */
-void print_all_records(struct Ordered_container *c_ptr);
-
 /* Compare records by their titles */
 int record_compare_title(const void* first_record, const void* second_record);
 
