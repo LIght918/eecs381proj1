@@ -58,19 +58,19 @@ static void OC_insert_before(struct Ordered_container* c_ptr, void* item_ptr, co
 static void OC_initialize_node(struct LL_Node* node_ptr, struct LL_Node* prev, struct LL_Node* next, const void* data_ptr);
 
 /* Checks if item_ptr's data is equal to arg_ptr, and if so, deletes */
-static int OC_check_and_delete(struct Ordered_container* c_ptr, void* item_ptr, OC_comp_fp_t comp_func, const void* arg_ptr);
+static int OC_check_and_delete(const struct Ordered_container* c_ptr, void* item_ptr, OC_comp_fp_t comp_func, const void* arg_ptr);
 
 /* Checks if item_ptr's data is equal to or lesser than arg_ptr, and if so, inserts it before */
-static int OC_check_and_insert(struct Ordered_container* c_ptr, void* item_ptr, OC_comp_fp_t comp_func, const void* arg_ptr);
+static int OC_check_and_insert(const struct Ordered_container* c_ptr, void* item_ptr, OC_comp_fp_t comp_func, const void* arg_ptr);
 
 /* Checks if item_ptr's data is equal to arg_ptr, and if so, returns item_ptr */
-static void *OC_check_and_find(struct Ordered_container* c_ptr, void* item_ptr, OC_comp_fp_t comp_func, const void* arg_ptr);
+static void *OC_check_and_find(const struct Ordered_container* c_ptr, void* item_ptr, OC_comp_fp_t comp_func, const void* arg_ptr);
 
 /* Type of function used to pass function pointers around OC_apply functions */
 typedef void(*OC_apply_template_fp_t) (void);
 
 /* Type of function used by OC_apply for APPLY_INTERNAL */
-typedef int(*OC_apply_internal_fp_t) (struct Ordered_container *c_ptr, void* item_ptr, OC_comp_fp_t comp_func, const void* arg_ptr);
+typedef int(*OC_apply_internal_fp_t) (const struct Ordered_container *c_ptr, void* item_ptr, OC_comp_fp_t comp_func, const void* arg_ptr);
 
 /* Helper function for OC_apply functions */
 static int OC_apply_helper(const struct Ordered_container* c_ptr, OC_apply_template_fp_t afp, void* arg_ptr, apply_enum apply_func, OC_comp_fp_t comp_func);
@@ -323,7 +323,7 @@ static void OC_initialize_node(struct LL_Node* node_ptr, struct LL_Node* prev, s
 }
 
 /* Checks if item_ptr's data is equal to arg_ptr, and if so, deletes */
-static int OC_check_and_delete(struct Ordered_container* c_ptr, void* item_ptr, OC_comp_fp_t comp_func, const void* arg_ptr)
+static int OC_check_and_delete(const struct Ordered_container* c_ptr, void* item_ptr, OC_comp_fp_t comp_func, const void* arg_ptr)
 {
 	if (comp_func(OC_get_data_ptr(item_ptr), arg_ptr) == 0)
 	{
@@ -334,7 +334,7 @@ static int OC_check_and_delete(struct Ordered_container* c_ptr, void* item_ptr, 
 }
 
 /* Checks if item_ptr's data is equal to or lesser than arg_ptr, and if so, inserts it before */
-static int OC_check_and_insert(struct Ordered_container* c_ptr, void* item_ptr, OC_comp_fp_t comp_func, const void* arg_ptr)
+static int OC_check_and_insert(const struct Ordered_container* c_ptr, void* item_ptr, OC_comp_fp_t comp_func, const void* arg_ptr)
 {
 	if (comp_func(OC_get_data_ptr(item_ptr), arg_ptr) >= 0)
 	{
@@ -345,7 +345,7 @@ static int OC_check_and_insert(struct Ordered_container* c_ptr, void* item_ptr, 
 }
 
 /* Checks if item_ptr's data is equal to arg_ptr, and if so, returns item_ptr */
-static void *OC_check_and_find(struct Ordered_container* c_ptr, void* item_ptr, OC_comp_fp_t comp_func, const void* arg_ptr)
+static void *OC_check_and_find(const struct Ordered_container* c_ptr, void* item_ptr, OC_comp_fp_t comp_func, const void* arg_ptr)
 {
 	if (comp_func(OC_get_data_ptr(item_ptr), arg_ptr) == 0)
 	{
