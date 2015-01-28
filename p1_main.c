@@ -373,7 +373,6 @@ int main()
 					{
 						case 'A': /* save all */
 						{
-							char filename[BUFFER_SIZE];
 							FILE *outfile = read_filename_open_file("w");
 							if (!outfile)
 							{
@@ -406,7 +405,7 @@ int main()
 								break;
 							}
 							clear_all(catalog, library_title, library_id);
-							if (fscanf(infile, "%d\n", records) != 1)
+							if (fscanf(infile, "%d\n", &records) != 1)
 							{
 								file_invalid_error(infile);
 								break;
@@ -422,7 +421,7 @@ int main()
 								OC_insert(library_title, record);
 								OC_insert(library_id, record);
 							}
-							if (records > 0 || fscanf(infile, "%d\n", collections) != 1)
+							if (records > 0 || fscanf(infile, "%d\n", &collections) != 1)
 							{
 								file_invalid_error(infile);
 								clear_all(catalog, library_title, library_id);
@@ -483,13 +482,13 @@ int main()
 /* Compare collections by their name */
 int collection_compare(const void* first_collection, const void* second_collection)
 {
-	return strcomp(get_Collection_name(first_collection), get_Collection_name(second_collection));
+	return strcmp(get_Collection_name(first_collection), get_Collection_name(second_collection));
 }
 
 /* Compares a collection's title with the given title */
 int collection_name_compare(const void* name, const void* collection)
 {
-	return strcomp((const char*)name, get_Collection_name((const struct Collection*)collection));
+	return strcmp((const char*)name, get_Collection_name((const struct Collection*)collection));
 }
 
 /* Print a collection */
