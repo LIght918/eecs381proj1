@@ -66,11 +66,14 @@ static int OC_check_and_find(struct Ordered_container* c_ptr, void* item_ptr, OC
 /* Initialize data for LL_Node* given */
 static void OC_initialize_node(struct LL_Node* node_ptr, struct LL_Node* prev, struct LL_Node* next, const void* data_ptr);
 
+/* Type of function used to pass function pointers around OC_apply functions */
+typedef void(*OC_apply_template) (void);
+
 /* Type of function used by OC_apply for APPLY_INTERNAL */
 typedef int(*OC_apply_internal_fp_t) (struct Ordered_container *c_ptr, void* item_ptr, OC_comp_fp_t comp_func, const void* arg_ptr);
 
 /* Helper function for OC_apply functions */
-static int OC_apply_helper(const struct Ordered_container* c_ptr, void* afp, void* arg_ptr, apply_enum apply_func, OC_comp_fp_t comp_func);
+static int OC_apply_helper(const struct Ordered_container* c_ptr, OC_apply_template afp, void* arg_ptr, apply_enum apply_func, OC_comp_fp_t comp_func);
 
 /* Deallocate all nodes */
 static void OC_deallocate_all(struct Ordered_container *c_ptr);
@@ -83,7 +86,7 @@ Functions for the entire container.
 struct Ordered_container* OC_create_container(OC_comp_fp_t f_ptr)
 {
 	struct Ordered_container *c_ptr = malloc(sizeof(struct Ordered_container));
-	c_ptr->comp_fun = f_ptr;
+	c_ptr->comp_func = f_ptr;
 	OC_initialize_container(c_ptr);
 	g_Container_count++;
 	return c_ptr;
@@ -163,7 +166,7 @@ void OC_delete_item(struct Ordered_container* c_ptr, void* item_ptr)
 		c_ptr->size--;
 	}
 	OC_change_globals(CONTAINER_GLOBAL_MINUS_ONE);
-	OC_deallocate_item(c_ptr, item_ptr);
+	OC_deallocate_item(c_ptr, item_ptr, NULL, NULL);
 }
 
 /*
@@ -176,7 +179,7 @@ the comparison function, the order of the new item relative to the existing item
 This function will not modify the pointed-to data. */
 void OC_insert(struct Ordered_container* c_ptr, const void* data_ptr)
 {
-	int is_inserted = OC_apply_helper(c_ptr, OC_check_and_insert, data_ptr, APPLY_INTERNAL, c_ptr->comp_func);
+	int is_inserted = OC_apply_helper(c_ptr, (OC_apply_template)OC_check_and_insert, data_ptr, APPLY_INTERNAL, c_ptr->comp_func);
 	if (is_inserted == 0)
 	{
 		OC_insert_after(c_ptr, c_ptr->last);
@@ -191,7 +194,7 @@ NULL is returned if no matching item is found. If more than one matching item is
 unspecified which one is returned. The pointed-to data will not be modified. */
 void* OC_find_item(const struct Ordered_container* c_ptr, const void* data_ptr)
 {
-	return OC_apply_helper(c_ptr, OC_check_and_find, data_ptr, APPLY_INTERNAL, c_ptr->comp_func);
+	return OC_apply_helper(c_ptr, (OC_apply_template)OC_check_and_find, data_ptr, APPLY_INTERNAL, c_ptr->comp_func);
 }
 
 /* Return a pointer to the item that points to data that matches the supplied argument given by arg_ptr
@@ -204,7 +207,7 @@ with the ordering produced by the comparison function specified when the contain
 if not, the result is undefined. */
 void* OC_find_item_arg(const struct Ordered_container* c_ptr, const void* arg_ptr, OC_find_item_arg_fp_t fafp)
 {
-	return OC_apply_helper(c_ptr, OC_check_and_find, data_ptr, APPLY_INTERNAL, fafp);
+	return OC_apply_helper(c_ptr, (OC_apply_template)OC_check_and_find, data_ptr, APPLY_INTERNAL, fafp);
 }
 
 /* Functions that traverse the items in the container, processing each item in order. */
@@ -213,7 +216,7 @@ void* OC_find_item_arg(const struct Ordered_container* c_ptr, const void* arg_pt
 The contents of the container cannot be modified. */
 void OC_apply(const struct Ordered_container* c_ptr, OC_apply_fp_t afp)
 {
-	OC_apply_helper(c_ptr, afp, NULL, APPLY, NULL);
+	OC_apply_helper(c_ptr, (OC_apply_template)afp, NULL, APPLY, NULL);
 }
 
 /* Apply the supplied function to the data pointer in each item in the container.
@@ -221,7 +224,7 @@ If the function returns non-zero, the iteration is terminated, and that value
 returned. Otherwise, zero is returned. The contents of the container cannot be modified. */
 int OC_apply_if(const struct Ordered_container* c_ptr, OC_apply_if_fp_t afp)
 {
-	return OC_apply_helper(c_ptr, afp, NULL, APPLY_IF, NULL);
+	return OC_apply_helper(c_ptr, (OC_apply_template)afp, NULL, APPLY_IF, NULL);
 }
 
 /* Apply the supplied function to the data pointer in each item in the container;
@@ -229,7 +232,7 @@ the function takes a second argument, which is the supplied void pointer.
 The contents of the container cannot be modified. */
 void OC_apply_arg(const struct Ordered_container* c_ptr, OC_apply_arg_fp_t afp, void* arg_ptr)
 {
-	OC_apply_helper(c_ptr, afp, arg_ptr, APPLY_ARG, NULL);
+	OC_apply_helper(c_ptr, (OC_apply_template)afp, arg_ptr, APPLY_ARG, NULL);
 }
 
 /* Apply the supplied function to the data pointer in each item in the container;
@@ -238,7 +241,7 @@ If the function returns non-zero, the iteration is terminated, and that value
 returned. Otherwise, zero is returned. The contents of the container cannot be modified */
 int OC_apply_if_arg(const struct Ordered_container* c_ptr, OC_apply_if_arg_fp_t afp, void* arg_ptr)
 {
-	return OC_apply_helper(c_ptr, afp, arg_ptr, APPLY_ARG_IF, NULL);
+	return OC_apply_helper(c_ptr, (OC_apply_template)afp, arg_ptr, APPLY_ARG_IF, NULL);
 }
 
 /*
@@ -346,7 +349,7 @@ static void OC_initialize_node(struct LL_Node* node_ptr, struct LL_Node* prev, s
 }
 
 /* Helper function for OC_apply functions */
-static int OC_apply_helper(const struct Ordered_container* c_ptr, void* afp, void* arg_ptr, apply_enum apply_func, OC_comp_fp_t comp_func)
+static int OC_apply_helper(const struct Ordered_container* c_ptr, OC_apply_template afp, void* arg_ptr, apply_enum apply_func, OC_comp_fp_t comp_func)
 {
 	struct LL_Node *node_ptr = c_ptr->first;
 	while (node_ptr != NULL)
