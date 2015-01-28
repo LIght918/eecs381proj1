@@ -172,7 +172,7 @@ void OC_delete_item(struct Ordered_container* c_ptr, void* item_ptr)
 		c_ptr->size--;
 	}
 	OC_change_globals(CONTAINER_GLOBAL_MINUS_ONE);
-	OC_deallocate_item(c_ptr, item_ptr, NULL, NULL);
+	OC_deallocate_item(c_ptr, item_ptr, NULL);
 }
 
 /*
@@ -185,7 +185,7 @@ the comparison function, the order of the new item relative to the existing item
 This function will not modify the pointed-to data. */
 void OC_insert(struct Ordered_container* c_ptr, const void* data_ptr)
 {
-	int is_inserted = OC_apply_helper(c_ptr, (OC_apply_template_fp_t)OC_check_and_insert, (void*)data_ptr, APPLY_INTERNAL, c_ptr->comp_func);
+	int is_inserted = OC_apply_helper(c_ptr, (OC_apply_template_fp_t)OC_check_and_insert, (void*)data_ptr, APPLY_INTERNAL);
 	if (is_inserted == 0)
 	{
 		OC_insert_after(c_ptr, c_ptr->last, data_ptr);
@@ -222,7 +222,7 @@ void* OC_find_item_arg(const struct Ordered_container* c_ptr, const void* arg_pt
 The contents of the container cannot be modified. */
 void OC_apply(const struct Ordered_container* c_ptr, OC_apply_fp_t afp)
 {
-	OC_apply_helper(c_ptr, (OC_apply_template_fp_t)afp, NULL, APPLY, NULL);
+	OC_apply_helper(c_ptr, (OC_apply_template_fp_t)afp, NULL, APPLY);
 }
 
 /* Apply the supplied function to the data pointer in each item in the container.
@@ -230,7 +230,7 @@ If the function returns non-zero, the iteration is terminated, and that value
 returned. Otherwise, zero is returned. The contents of the container cannot be modified. */
 int OC_apply_if(const struct Ordered_container* c_ptr, OC_apply_if_fp_t afp)
 {
-	return OC_apply_helper(c_ptr, (OC_apply_template_fp_t)afp, NULL, APPLY_IF, NULL);
+	return OC_apply_helper(c_ptr, (OC_apply_template_fp_t)afp, NULL, APPLY_IF);
 }
 
 /* Apply the supplied function to the data pointer in each item in the container;
@@ -238,7 +238,7 @@ the function takes a second argument, which is the supplied void pointer.
 The contents of the container cannot be modified. */
 void OC_apply_arg(const struct Ordered_container* c_ptr, OC_apply_arg_fp_t afp, void* arg_ptr)
 {
-	OC_apply_helper(c_ptr, (OC_apply_template_fp_t)afp, arg_ptr, APPLY_ARG, NULL);
+	OC_apply_helper(c_ptr, (OC_apply_template_fp_t)afp, arg_ptr, APPLY_ARG);
 }
 
 /* Apply the supplied function to the data pointer in each item in the container;
@@ -247,7 +247,7 @@ If the function returns non-zero, the iteration is terminated, and that value
 returned. Otherwise, zero is returned. The contents of the container cannot be modified */
 int OC_apply_if_arg(const struct Ordered_container* c_ptr, OC_apply_if_arg_fp_t afp, void* arg_ptr)
 {
-	return OC_apply_helper(c_ptr, (OC_apply_template_fp_t)afp, arg_ptr, APPLY_ARG_IF, NULL);
+	return OC_apply_helper(c_ptr, (OC_apply_template_fp_t)afp, arg_ptr, APPLY_ARG_IF);
 }
 
 /*
@@ -270,7 +270,7 @@ static void OC_initialize_container(struct Ordered_container* c_ptr)
 }
 
 /* Deallocates a single node */
-static int OC_deallocate_item(struct Ordered_container* c_ptr, void* item_ptr, const void* arg_ptr)
+static int OC_deallocate_item(const struct Ordered_container* c_ptr, void* item_ptr, const void* arg_ptr)
 {
 	free(item_ptr);
 	return 0;
