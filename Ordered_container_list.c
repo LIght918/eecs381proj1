@@ -61,7 +61,7 @@ static int OC_check_and_delete(struct Ordered_container* c_ptr, void* item_ptr, 
 static int OC_check_and_insert(struct Ordered_container* c_ptr, void* item_ptr, OC_comp_fp_t comp_func, const void* arg_ptr);
 
 /* Checks if item_ptr's data is equal to arg_ptr, and if so, returns item_ptr */
-static int OC_check_and_find(struct Ordered_container* c_ptr, void* item_ptr, OC_comp_fp_t comp_func, const void* arg_ptr);
+static void *OC_check_and_find(struct Ordered_container* c_ptr, void* item_ptr, OC_comp_fp_t comp_func, const void* arg_ptr);
 
 /* Initialize data for LL_Node* given */
 static void OC_initialize_node(struct LL_Node* node_ptr, struct LL_Node* prev, struct LL_Node* next, const void* data_ptr);
@@ -257,7 +257,7 @@ Private helper functions
 /* Change globals for items in use and items allocated simultaneously */
 static void OC_change_globals(int delta)
 {
-	g_Container_items_allocated - += delta;
+	g_Container_items_allocated += delta;
 	g_Container_items_in_use += delta;
 }
 
@@ -341,7 +341,7 @@ static void *OC_check_and_find(struct Ordered_container* c_ptr, void* item_ptr, 
 {
 	if (comp_func(OC_get_data_ptr(item_ptr), arg_ptr) == 0)
 	{
-		return (int)item_ptr;
+		return item_ptr;
 	}
 	return 0;
 }
