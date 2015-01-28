@@ -12,8 +12,11 @@ int collection_compare(const void* first_collection, const void* second_collecti
 /* Compares a collection's title with the given title */
 int collection_name_compare(const void* name, const void* collection);
 
+/* print a collection */
+void collection_print(void* collection);
+
 /* Used to print all members of a container containing collections */
-void print_all_collections(struct Collection *collection);
+void print_all_collections(struct Ordered_container *c_ptr);
 
 /* Read in title and get record from library */
 struct Record * read_title_get_record(struct Ordered_container *library_title);
@@ -126,7 +129,7 @@ int main()
 							if (!OC_empty(catalog))
 							{
 								printf("Catalog contains %d collections:\n");
-								OC_apply(catalog, print_Collection);
+								print_all_collections(catalog);
 							}
 							else
 							{
@@ -490,6 +493,18 @@ int collection_compare(const void* first_collection, const void* second_collecti
 int collection_name_compare(const void* name, const void* collection)
 {
 	return strcomp((const char*)name, get_Collection_name((const struct Collection*)collection));
+}
+
+/* print a collection */
+void collection_print(void* collection)
+{
+	print_Collection((struct Collection *)collection);
+}
+
+/* Used to print all members of a container containing collections */
+void print_all_collections(struct Ordered_container *c_ptr)
+{
+	OC_apply(c_ptr, collection_print);
 }
 
 /* Read in title and get record from library */
