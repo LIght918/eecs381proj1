@@ -76,7 +76,7 @@ typedef int(*OC_apply_internal_fp_t) (struct Ordered_container *c_ptr, void* ite
 static int OC_apply_helper(const struct Ordered_container* c_ptr, OC_apply_template_fp_t afp, void* arg_ptr, apply_enum apply_func, OC_comp_fp_t comp_func);
 
 /* Type of function used by OC_find and OC_find_arg */
-typedef int(*OC_find_fp_t) (struct Ordered_container *c_ptr, void* item_ptr, OC_comp_fp_t comp_func, const void* arg_ptr);
+typedef void *(*OC_find_fp_t) (struct Ordered_container *c_ptr, void* item_ptr, OC_comp_fp_t comp_func, const void* arg_ptr);
 
 /* Helper function for OC_find functions */
 static void *OC_find_helper(const struct Ordered_container* c_ptr, OC_find_fp_t afp, const void* arg_ptr, OC_comp_fp_t comp_func);
