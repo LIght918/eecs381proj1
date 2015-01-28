@@ -4,13 +4,13 @@
 #define BUFFER_SIZE 64
 #define SCAN_BUFFER "%63s"
 
-int g_string_memory = 0;		/* number of bytes used in C-strings */
-int g_Collection_count = 0;		/* number of collections */
-int g_Record_count = 0;			/* number of records */
+extern int g_string_memory;		/* number of bytes used in C-strings */
+extern int g_Collection_count;		/* number of collections */
+extern int g_Record_count;			/* number of records */
 
 /* These global variables are used to monitor the memory usage of the Ordered_container */
-int g_Container_count = 0;				/* number of Ordered_containers currently allocated */
-int g_Container_items_in_use = 0;		/* number of Ordered_container items currently in use */
-int g_Container_items_allocated = 0;	/* number of Ordered_container items currently allocated */
+extern int g_Container_count;				/* number of Ordered_containers currently allocated */
+extern int g_Container_items_in_use;		/* number of Ordered_container items currently in use */
+extern int g_Container_items_allocated;	/* number of Ordered_container items currently allocated */
 
 #endif

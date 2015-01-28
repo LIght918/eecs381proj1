@@ -114,9 +114,14 @@ struct Collection* load_Collection(FILE* input_file, const struct Ordered_contai
 	struct Collection *collection;
 	char collection_name[BUFFER_SIZE];
 	int elements = 0;
-	if (fscanf(input_file, "%SCAN_BUFFER_SIZEs %d\n", collection_name, elements) != 2)
+	if (fscanf(input_file, SCAN_BUFFER, collection_name) != 1)
 	{
-		/* error reading size and name */
+		/* error reading name */
+		return NULL;
+	}
+	if (fscanf(input_file, "%d\n", elements) != 2)
+	{
+		/* error reading size */
 		return NULL;
 	}
 	collection = create_Collection(collection_name);
