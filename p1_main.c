@@ -163,7 +163,7 @@ int main()
 						{
 							int id, rating;
 							struct Record *item = read_id_get_record(library_id);
-							if (scanf("%d", rating) != 1)
+							if (scanf("%d", &rating) != 1)
 							{
 								integer_read_error();
 								break;
@@ -194,7 +194,7 @@ int main()
 							char title_buffer[BUFFER_SIZE];
 							char *title;
 							struct Record *record;
-							if (scanf("%SCAN_BUFFER_SIZEs", medium) != 1)
+							if (scanf("%" + SCAN_BUFFER_SIZE + "s", medium) != 1)
 							{
 								title_read_error();
 								break;
@@ -220,7 +220,7 @@ int main()
 						{
 							char name[BUFFER_SIZE];
 							struct Collection *collection;
-							if (scanf("%SCAN_BUFFER_SIZEs", name) != 1)
+							if (scanf("%" + SCAN_BUFFER_SIZE + "s", name) != 1)
 							{
 								title_read_error();
 								break;
@@ -363,7 +363,7 @@ int main()
 						{
 							char filename[BUFFER_SIZE];
 							FILE *outfile;
-							if (scanf("%SCAN_BUFFER_SIZEs", filename) != 1)
+							if (scanf("%" + SCAN_BUFFER_SIZE + "s", filename) != 1)
 							{
 								file_open_error();
 								return NULL;
@@ -397,7 +397,7 @@ int main()
 							int records, collections;
 							char filename[BUFFER_SIZE];
 							FILE *infile;
-							if (scanf("%SCAN_BUFFER_SIZEs", filename) != 1)
+							if (scanf("%" + SCAN_BUFFER_SIZE + "s", filename) != 1)
 							{
 								file_open_error();
 								return NULL;
@@ -549,7 +549,7 @@ struct Collection * read_name_get_collection(struct Ordered_container *catalog)
 {
 	char name[BUFFER_SIZE];
 	struct Collection *collection;
-	if (scanf("%SCAN_BUFFER_SIZEs", name) != 1)
+	if (scanf("%" + SCAN_BUFFER_SIZE + "s", name) != 1)
 	{
 		/* couldn't read name */
 		return NULL;
