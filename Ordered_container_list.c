@@ -179,10 +179,10 @@ the comparison function, the order of the new item relative to the existing item
 This function will not modify the pointed-to data. */
 void OC_insert(struct Ordered_container* c_ptr, const void* data_ptr)
 {
-	int is_inserted = OC_apply_helper(c_ptr, (OC_apply_template)OC_check_and_insert, data_ptr, APPLY_INTERNAL, c_ptr->comp_func);
+	int is_inserted = OC_apply_helper(c_ptr, (OC_apply_template)OC_check_and_insert, (void*)data_ptr, APPLY_INTERNAL, c_ptr->comp_func);
 	if (is_inserted == 0)
 	{
-		OC_insert_after(c_ptr, c_ptr->last);
+		OC_insert_after(c_ptr, c_ptr->last, data_ptr);
 	}
 	OC_change_globals(CONTAINER_GLOBAL_ADD_ONE);
 }
@@ -194,7 +194,7 @@ NULL is returned if no matching item is found. If more than one matching item is
 unspecified which one is returned. The pointed-to data will not be modified. */
 void* OC_find_item(const struct Ordered_container* c_ptr, const void* data_ptr)
 {
-	return OC_apply_helper(c_ptr, (OC_apply_template)OC_check_and_find, data_ptr, APPLY_INTERNAL, c_ptr->comp_func);
+	return (void*)OC_apply_helper(c_ptr, (OC_apply_template)OC_check_and_find, (void*)data_ptr, APPLY_INTERNAL, c_ptr->comp_func);
 }
 
 /* Return a pointer to the item that points to data that matches the supplied argument given by arg_ptr
@@ -207,7 +207,7 @@ with the ordering produced by the comparison function specified when the contain
 if not, the result is undefined. */
 void* OC_find_item_arg(const struct Ordered_container* c_ptr, const void* arg_ptr, OC_find_item_arg_fp_t fafp)
 {
-	return OC_apply_helper(c_ptr, (OC_apply_template)OC_check_and_find, data_ptr, APPLY_INTERNAL, fafp);
+	return (void*)OC_apply_helper(c_ptr, (OC_apply_template)OC_check_and_find, (void*)arg_ptr, APPLY_INTERNAL, fafp);
 }
 
 /* Functions that traverse the items in the container, processing each item in order. */
