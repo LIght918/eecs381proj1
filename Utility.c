@@ -1,5 +1,6 @@
 #include "Utility.h"
 #include "Record.h"
+#include <ctype.h>
 #include <string.h>
 #include "p1_globals.h"
 
@@ -28,7 +29,7 @@ int record_title_compare(const void* title, const void* record)
 }
 
 /* Compares a record's id with the given id */
-int record_id_compare(const void* id, const struct Record *record)
+int record_id_compare(const void* id, const void* record)
 {
 	return *((int *)id) - get_Record_ID((const struct Record *)record);
 }
@@ -37,7 +38,7 @@ int record_id_compare(const void* id, const struct Record *record)
 char * read_title(char *title, FILE *infile)
 {
 	char *title_start = title;
-	char *title_end = title + SCAN_BUFFER_SIZE - 1;
+	char *title_end = title + TITLE_BUFFER_END;
 	/* note: title + SCAN_BUFFER_SIZE is the last character, which must be \0...we want the character before*/
 	if (!fgets(title, BUFFER_SIZE, infile))
 	{

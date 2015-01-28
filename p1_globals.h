@@ -3,6 +3,7 @@
 
 #define BUFFER_SIZE 64
 #define SCAN_BUFFER "%63s"
+#define TITLE_BUFFER_END 62
 
 extern int g_string_memory;		/* number of bytes used in C-strings */
 extern int g_Collection_count;		/* number of collections */
