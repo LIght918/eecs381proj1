@@ -21,7 +21,7 @@ extern int g_Record_count;		/* global to store number of collections */
 The function that allocates dynamic memory for a Record and the contained data. The rating is set to 0. */
 struct Record* create_Record(const char* medium, const char* title)
 {
-	struct Record *record = malloc(sizeof(Record));
+	struct Record *record = malloc(sizeof(struct Record));
 	int medium_len = strlen(medium) + 1;
 	int title_len = strlen(title) + 1;
 	g_string_memory += medium_len + title_len;
@@ -69,13 +69,13 @@ If the rating is zero, a 'u' is printed instead of the rating. */
 void print_Record(const struct Record* record_ptr)
 {
 	struct Record record = *record_ptr;
-	if (record->rating == 0)
+	if (record.rating == 0)
 	{
-			printf("%d: %s u %s\n", record->ID, record->medium, record->title);
+			printf("%d: %s u %s\n", record.ID, record.medium, record.title);
 	}
 	else
 	{
-			printf("%d: %s %d %s\n", record->ID, record->medium, record->rating, record->title);
+			printf("%d: %s %d %s\n", record.ID, record.medium, record.rating, record.title);
 	}
 }
 
@@ -84,7 +84,7 @@ Output order is ID number, medium, rating, title */
 void save_Record(const struct Record* record_ptr, FILE* outfile)
 {
 	struct Record record = *record_ptr;
-	fprintf(outfile, "%d %s %d %s\n", record->ID, record->medium, record->rating, record->title);
+	fprintf(outfile, "%d %s %d %s\n", record.ID, record.medium, record.rating, record.title);
 }
 
 /* Read a Record's data from a file stream, create the data object and
