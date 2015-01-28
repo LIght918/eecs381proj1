@@ -5,10 +5,10 @@
 #include "p1_globals.h"
 #include <stdio.h>
 
-/* print a record */
+/* Print a record */
 void record_print(void* record);
 
-/* print all records in a collection */
+/* Print all records in a collection */
 void print_all_records(struct Ordered_container *c_ptr);
 
 /* Compare records by their titles */

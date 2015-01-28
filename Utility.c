@@ -2,13 +2,13 @@
 #include "Record.h"
 #include "p1_globals.h"
 
-/* print a record */
+/* Print a record */
 void record_print(void* record)
 {
 	print_Record((struct Record *)record);
 }
 
-/* print all records in a collection */
+/* Print all records in a collection */
 void print_all_records(struct Ordered_container *c_ptr)
 {
 	OC_apply(c_ptr, record_print);

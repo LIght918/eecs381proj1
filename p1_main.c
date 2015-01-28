@@ -21,6 +21,12 @@ void print_all_collections(struct Ordered_container *c_ptr);
 /* Checks collection if it contains member */
 int collection_contains(const void* collection_ptr, const void* record_ptr);
 
+/* Save a collection */
+void collection_save(void* collection, void* current_file);
+
+/* Save a record */
+void record_save(void* record, void* current_file);
+
 /* Read in title and get record from library */
 struct Record * read_title_get_record(struct Ordered_container *library_title);
 
@@ -283,7 +289,7 @@ int main()
 							}
 							OC_delete_item(library_title, item);
 							OC_delete_item(library_id, item);
-							printf("Record %d %s deleted\n", get_Record_id(item), get_Record_title(item));
+							printf("Record %d %s deleted\n", get_Record_ID(item), get_Record_title(item));
 							break;
 						}
 						case 'c': /* delete collection */
@@ -369,17 +375,17 @@ int main()
 							if (scanf(SCAN_BUFFER, filename) != 1)
 							{
 								file_open_error();
-								return NULL;
+								break;
 							}
-							outfile = fopen(outfile, "w");
+							outfile = fopen(filename, "w");
 							if (!outfile)
 							{
 								file_open_error();
 								break;
 							}
 							fprintf(outfile, "%d\n", OC_get_size(library_title));
-							OC_apply_arg(library_title, save_Record, outfile);
-							OC_apply_arg(catalog, save_Collection, outfile);
+							OC_apply_arg(library_title, record_save, outfile);
+							OC_apply_arg(catalog, collection_save, outfile);
 							fclose(outfile);
 							printf("Data saved\n");
 							break;
@@ -511,9 +517,21 @@ void print_all_collections(struct Ordered_container *c_ptr)
 }
 
 /* Checks collection if it contains member */
-int collection_contains(const void* collection_ptr, const void* record_ptr)
+int collection_contains(void* collection_ptr, void* record_ptr)
 {
-	return is_Collection_member_present((const struct Collection *) collection_ptr, (const struct Record *)record_ptr);
+	return is_Collection_member_present((struct Collection *) collection_ptr, (struct Record *)record_ptr);
+}
+
+/* Save a collection */
+void collection_save(void* collection, void* current_file)
+{
+	save_Collection((struct Collection *)collection, (FILE *)current_file);
+}
+
+/* Save a record */
+void record_save(void* record, void* current_file)
+{
+	save_Record((struct Record *)record, (FILE *)current_file);
 }
 
 /* Read in title and get record from library */

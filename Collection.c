@@ -16,10 +16,7 @@ struct Collection {
 extern int g_Collection_count;		/* global to store number of collections */
 
 /* Used to save all members of the collection */
-void save_all_records(struct Record *record, FILE *current_file)
-{
-	fprintf(current_file, "%s\n", get_Record_title(record));
-}
+void save_one_record(struct Record *record, FILE *current_file);
 
 /* Create a Collection object.
 This is the only function that allocates memory for a Collection
@@ -105,7 +102,7 @@ void print_Collection(const struct Collection* collection_ptr)
 void save_Collection(const struct Collection* collection_ptr, FILE* outfile)
 {
 	fprintf(outfile, "%s %d\n", collection_ptr->name, OC_get_size(collection_ptr->members));
-	OC_apply_arg(collection_ptr->members, save_all_records, outfile);
+	OC_apply_arg(collection_ptr->members, save_one_record, outfile);
 }
 
 /* Read a Collection's data from a file stream, create the data object and
@@ -133,4 +130,10 @@ struct Collection* load_Collection(FILE* input_file, const struct Ordered_contai
 		OC_insert(collection->members, OC_find_item_arg(collection->members, title, record_title_compare));
 	}
 	return collection;
+}
+
+/* Used to save all members of the collection */
+void save_one_record(void* record, void* current_file)
+{
+	fprintf((FILE*)current_file, "%s\n", get_Record_title((struct Record *)record));
 }
