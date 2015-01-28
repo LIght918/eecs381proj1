@@ -8,6 +8,12 @@ void record_print(void* record)
 	print_Record((struct Record *)record);
 }
 
+/* print all records in a collection */
+void print_all_records(struct Ordered_container *c_ptr)
+{
+	OC_apply(c_ptr, record_print);
+}
+
 /* Compare records by their titles */
 int record_compare_title(const void* first_record, const void* second_record)
 {

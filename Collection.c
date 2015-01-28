@@ -93,7 +93,7 @@ void print_Collection(const struct Collection* collection_ptr)
 	printf("Collection %s contains:\n", collection_ptr->name);
 	if (!Collection_empty(collection_ptr))
 	{
-		OC_apply(collection_ptr->members, record_print);
+		print_all_records(collection_ptr->members);
 	}
 	else
 	{
