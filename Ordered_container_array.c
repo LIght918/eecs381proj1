@@ -33,7 +33,7 @@ Private helper functions declarations
 */
 
 /* Searches for the specified element using the given comparison function */
-static struct Search_Result OC_binary_search(struct Ordered_container* c_ptr, void* data_ptr, OC_comp_fp_t comp_fun);
+static struct Search_Result OC_binary_search(struct Ordered_container* c_ptr, const void* data_ptr, OC_comp_fp_t comp_fun);
 
 /* Initialize the container to default values */
 static void OC_initialize_container(struct Ordered_container* c_ptr);
@@ -122,7 +122,7 @@ void* OC_get_data_ptr(const void* item_ptr)
 Caller is responsible for any deletion of the data pointed to by the item. */
 void OC_delete_item(struct Ordered_container* c_ptr, void* item_ptr)
 {
-	OC_apply_helper(c_ptr, OC_take_value_from_right, NULL, APPLY_INTERNAL, (void **)item_ptr - c_ptr->array, c_ptr->size - 1, 0);
+	OC_apply_helper(c_ptr, (OC_apply_template_fp_t)OC_take_value_from_right, NULL, APPLY_INTERNAL, (void **)item_ptr - c_ptr->array, c_ptr->size - 1, 0);
 	c_ptr->size--;
 	g_Container_items_in_use--;
 }
@@ -142,7 +142,7 @@ void OC_insert(struct Ordered_container* c_ptr, const void* data_ptr)
 	{
 		OC_rellocate_array(c_ptr);
 	}
-	OC_apply_helper(c_ptr, OC_take_value_from_left, NULL, APPLY_INTERNAL, result.index + 1, c_ptr->size, 1);
+	OC_apply_helper(c_ptr, (OC_apply_template_fp_t)OC_take_value_from_left, NULL, APPLY_INTERNAL, result.index + 1, c_ptr->size, 1);
 	c_ptr->array[result.index] = data_ptr;
 	g_Container_items_in_use++;
 }
@@ -217,7 +217,7 @@ Private helper functions
 */
 
 /* Searches for the specified element using the given comparison function */
-static struct Search_Result OC_binary_search(struct Ordered_container* c_ptr, void* data_ptr, OC_comp_fp_t comp_fun)
+static struct Search_Result OC_binary_search(struct Ordered_container* c_ptr, const void* data_ptr, OC_comp_fp_t comp_fun)
 {
 	struct Search_Result result;
 	int left = 0;
