@@ -26,7 +26,7 @@ typedef enum { APPLY, APPLY_IF, APPLY_ARG, APPLY_ARG_IF, APPLY_INTERNAL
 struct Search_Result {
 	int found; /* whether or not the value was found */
 	int index; /* the index of the element if found, or the element directly after */
-}
+};
 
 /*
 Private helper functions declarations
