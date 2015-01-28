@@ -2,7 +2,7 @@
 #define P1_GLOBALS
 
 #define BUFFER_SIZE 64
-#define SCAN_BUFFER_SIZE 63
+#define SCAN_BUFFER "%63s"
 
 int g_string_memory = 0;		/* number of bytes used in C-strings */
 int g_Collection_count = 0;		/* number of collections */
