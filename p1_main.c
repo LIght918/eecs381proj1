@@ -187,7 +187,7 @@ int main()
 								break;
 							}
 							set_Record_rating(item, rating);
-							printf("Rating for record %d changed to %d\n", id, rating);
+							printf("Rating for record %d changed to %d\n", get_Record_ID(item), rating);
 							break;
 						}
 						default:
