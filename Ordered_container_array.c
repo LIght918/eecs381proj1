@@ -310,7 +310,7 @@ static int OC_apply_helper(const struct Ordered_container* c_ptr, OC_apply_templ
 			((OC_apply_arg_fp_t)afp)(OC_get_data_ptr(item_ptr), arg_ptr);
 			break;
 		case APPLY_ARG_IF:
-			function_return = ((OC_apply_arg_if_fp_t)afp)(OC_get_data_ptr(item_ptr), arg_ptr);
+			function_return = ((OC_apply_if_arg_fp_t)afp)(OC_get_data_ptr(item_ptr), arg_ptr);
 			if (function_return)
 			{
 				return function_return;
@@ -327,7 +327,7 @@ static int OC_apply_helper(const struct Ordered_container* c_ptr, OC_apply_templ
 /* Simplified call to OC_apply_helper */
 static int OC_apply_helper_simple(const struct Ordered_container* c_ptr, OC_apply_template_fp_t afp, void* arg_ptr, apply_enum apply_func)
 {
-	return OC_apply_helper(c_ptr, afp, arg_ptr, apply_func, comp_func, 0, c_ptr->size, 0);
+	return OC_apply_helper(c_ptr, afp, arg_ptr, apply_func, 0, c_ptr->size, 0);
 }
 
 #endif
