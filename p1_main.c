@@ -174,7 +174,7 @@ int main()
 					{
 						case 'r': /* modify rating of a record */
 						{
-							int id, rating;
+							int rating;
 							struct Record *item = read_id_get_record(library_id);
 							if (scanf("%d", &rating) != 1)
 							{

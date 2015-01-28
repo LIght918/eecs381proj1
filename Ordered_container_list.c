@@ -2,6 +2,9 @@
 #define ORDERED_CONTAINER_LIST
 
 #include "Ordered_container.h"
+#include "Utility.h"
+#include "p1_globals.h"
+#include <stdlib.h>
 
 #define CONTAINER_GLOBAL_ADD_ONE 1
 #define CONTAINER_GLOBAL_MINUS_ONE -1

@@ -2,6 +2,9 @@
 #define ORDERED_CONTAINER_ARRAY
 
 #include "Ordered_container.h"
+#include "Utility.h"
+#include "p1_globals.h"
+#include <stdlib.h>
 
 #define SIZE_FACTOR 2
 #define ALLOCATION_INCREASE 1

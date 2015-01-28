@@ -2,6 +2,7 @@
 #include "Record.h"
 #include "Ordered_container.h"
 #include "Utility.h"
+#include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
 #include "p1_globals.h"
