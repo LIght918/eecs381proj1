@@ -1,8 +1,9 @@
 #include "Record.h"
+#include "Utility.h"
+#include "p1_globals.h"
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
-#include "p1_globals.h"
 #include <ctype.h>
 
 /* a Record contains an int ID, rating, and pointers to C-strings for the title and medium */
@@ -103,7 +104,7 @@ struct Record* load_Record(FILE* infile)
 		/* ID error */
 		return NULL;
 	}
-	if (fscanf(infile, "%SCAN_BUFFER_SIZEs", medium) != 1)
+	if (fscanf(infile, SCAN_BUFFER, medium) != 1)
 	{
 		/* medium error */
 		return NULL;
