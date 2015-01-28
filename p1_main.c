@@ -115,7 +115,7 @@ int main()
 						{
 							if (!OC_empty(library_title))
 							{
-								printf("Library contains %d records:\n", &OC_get_size(library_title));
+								printf("Library contains %d records:\n", OC_get_size(library_title));
 								print_all_records(library_title);
 							}
 							else
@@ -128,7 +128,7 @@ int main()
 						{
 							if (!OC_empty(catalog))
 							{
-								printf("Catalog contains %d collections:\n", &OC_get_size(catalog));
+								printf("Catalog contains %d collections:\n", OC_get_size(catalog));
 								print_all_collections(catalog);
 							}
 							else
