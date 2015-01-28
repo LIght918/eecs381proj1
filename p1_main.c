@@ -19,7 +19,7 @@ void collection_print(void* collection);
 void print_all_collections(struct Ordered_container *c_ptr);
 
 /* Checks collection if it contains member */
-int collection_contains(const void* collection_ptr, const void* record_ptr);
+int collection_contains(void* collection_ptr, void* record_ptr);
 
 /* Save a collection */
 void collection_save(void* collection, void* current_file);
@@ -47,6 +47,9 @@ void deallocate_and_clear(struct Ordered_container *container);
 
 /* Clear all data */
 void clear_all(struct Ordered_container *catalog, struct Ordered_container *library_title, struct Ordered_container *library_id);
+
+/* Reads in filename and open file with given mode */
+FILE * read_filename_open_file(char * mode);
 
 /* Action Object input error message */
 void action_object_input_error();
@@ -313,7 +316,7 @@ int main()
 							}
 							if (!remove_Collection_member(collection, item))
 							{
-								printf("Member %d %s deleted\n", get_Record_id(item), get_Record_title(item));
+								printf("Member %d %s deleted\n", get_Record_ID(item), get_Record_title(item));
 							}
 							else
 							{
@@ -371,16 +374,9 @@ int main()
 						case 'A': /* save all */
 						{
 							char filename[BUFFER_SIZE];
-							FILE *outfile;
-							if (scanf(SCAN_BUFFER, filename) != 1)
-							{
-								file_open_error();
-								break;
-							}
-							outfile = fopen(filename, "w");
+							FILE *outfile = read_filename_open_file("w");
 							if (!outfile)
 							{
-								file_open_error();
 								break;
 							}
 							fprintf(outfile, "%d\n", OC_get_size(library_title));
@@ -404,17 +400,9 @@ int main()
 						case 'A': /* restore all */
 						{
 							int records, collections;
-							char filename[BUFFER_SIZE];
-							FILE *infile;
-							if (scanf(SCAN_BUFFER, filename) != 1)
-							{
-								file_open_error();
-								return NULL;
-							}
-							infile = fopen(outfile, "w");
+							FILE *infile = read_filename_open_file("r");
 							if (!infile)
 							{
-								file_open_error();
 								break;
 							}
 							clear_all(catalog, library_title, library_id);
@@ -615,6 +603,23 @@ void clear_all(struct Ordered_container *catalog, struct Ordered_container *libr
 	deallocate_and_clear(library_title);
 	deallocate_and_clear(library_id);
 	reset_Record_ID_counter();
+}
+
+/* Reads in filename and open file with given mode */
+FILE * read_filename_open_file(char * mode)
+{
+	char filename[BUFFER_SIZE];
+	if (scanf(SCAN_BUFFER, filename) != 1)
+	{
+		file_open_error();
+		break;
+	}
+	infile = fopen(outfile, mode);
+	if (!infile)
+	{
+		file_open_error();
+		break;
+	}
 }
 
 /* Action Object input error message */
