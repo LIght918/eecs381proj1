@@ -16,7 +16,7 @@ struct Record {
 
 static int next_record_id;		/* next record id to be assigned */
 
-extern int g_Record_count;		/* global to store number of collections */
+extern int g_Record_count;		/* global to store number of records */
 
 /* Create a Record object, giving it the next ID number using the ID number counter.
 The function that allocates dynamic memory for a Record and the contained data. The rating is set to 0. */
