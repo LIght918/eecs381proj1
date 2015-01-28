@@ -64,7 +64,7 @@ Functions for the entire container.
 /* Create an empty container using the supplied comparison function, and return the pointer to it. */
 struct Ordered_container* OC_create_container(OC_comp_fp_t f_ptr)
 {
-	struct Ordered_container *c_ptr = (Ordered_container*)malloc(sizeof(Ordered_container));
+	struct Ordered_container *c_ptr = (Ordered_container*)malloc(sizeof(struct Ordered_container));
 	c_ptr->comp_fun = f_ptr;
 	OC_initialize_container(c_ptr);
 	g_Container_count++;
