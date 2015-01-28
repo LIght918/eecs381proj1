@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 #include "p1_globals.h"
 #include "Collection.h"
@@ -545,7 +546,7 @@ struct Record * read_id_get_record(struct Ordered_container *library_id)
 {
 	int id;
 	struct Record *item;
-	if (scanf("%d", id) != 1)
+	if (scanf("%d", &id) != 1)
 	{
 		integer_read_error();
 		return NULL;
