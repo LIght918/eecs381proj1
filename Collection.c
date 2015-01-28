@@ -119,7 +119,7 @@ struct Collection* load_Collection(FILE* input_file, const struct Ordered_contai
 		/* error reading name */
 		return NULL;
 	}
-	if (fscanf(input_file, "%d\n", elements) != 2)
+	if (fscanf(input_file, "%d\n", &elements) != 2)
 	{
 		/* error reading size */
 		return NULL;

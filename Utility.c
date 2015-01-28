@@ -1,5 +1,6 @@
 #include "Utility.h"
 #include "Record.h"
+#include <string.h>
 #include "p1_globals.h"
 
 /* Print a record */
@@ -11,7 +12,7 @@ void record_print(void* record)
 /* Compare records by their titles */
 int record_compare_title(const void* first_record, const void* second_record)
 {
-	return strcomp(get_Record_title((const struct Record *)first_record), get_Record_title((const struct Record *)second_record));
+	return strcmp(get_Record_title((const struct Record *)first_record), get_Record_title((const struct Record *)second_record));
 }
 
 /* Compare records by their ids */
@@ -23,7 +24,7 @@ int record_compare_id(const void* first_record, const void* second_record)
 /* Compares a record's title with the given title */
 int record_title_compare(const void* title, const void* record)
 {
-	return strcomp((const char*)title, get_Record_title((const struct Record *)record));
+	return strcmp((const char*)title, get_Record_title((const struct Record *)record));
 }
 
 /* Compares a record's id with the given id */
