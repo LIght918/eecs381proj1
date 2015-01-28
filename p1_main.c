@@ -615,7 +615,7 @@ FILE * read_filename_open_file(char * mode)
 		file_open_error();
 		return NULL;
 	}
-	file = fopen(outfile, mode);
+	file = fopen(filename, mode);
 	if (!file)
 	{
 		file_open_error();
