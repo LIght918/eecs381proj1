@@ -33,7 +33,7 @@ Private helper functions declarations
 */
 
 /* Searches for the specified element using the given comparison function */
-static struct Search_Result OC_binary_search(struct Ordered_container* c_ptr, const void* data_ptr, OC_comp_fp_t comp_fun);
+static struct Search_Result OC_binary_search(const struct Ordered_container* c_ptr, const void* data_ptr, OC_comp_fp_t comp_fun);
 
 /* Initialize the container to default values */
 static void OC_initialize_container(struct Ordered_container* c_ptr);
@@ -58,7 +58,7 @@ Performed on range [start, end), in order depending on reverse */
 static int OC_apply_helper(const struct Ordered_container* c_ptr, OC_apply_template_fp_t afp, void* arg_ptr, apply_enum apply_func, int start, int end, int reverse);
 
 /* Simplified call to OC_apply_helper */
-static int OC_apply_helper_simple(const struct Ordered_container* c_ptr, void* afp, void* arg_ptr, apply_enum apply_func);
+static int OC_apply_helper_simple(const struct Ordered_container* c_ptr, OC_apply_template_fp_t afp, void* arg_ptr, apply_enum apply_func);
 
 /*
 Functions for the entire container.
@@ -140,10 +140,10 @@ void OC_insert(struct Ordered_container* c_ptr, const void* data_ptr)
 	struct Search_Result result = OC_binary_search(c_ptr, data_ptr, c_ptr->comp_fun);
 	if (c_ptr->size == c_ptr->allocation)
 	{
-		OC_rellocate_array(c_ptr);
+		OC_reallocate_array(c_ptr);
 	}
 	OC_apply_helper(c_ptr, (OC_apply_template_fp_t)OC_take_value_from_left, NULL, APPLY_INTERNAL, result.index + 1, c_ptr->size, 1);
-	c_ptr->array[result.index] = data_ptr;
+	c_ptr->array[result.index] = (void*)data_ptr;
 	g_Container_items_in_use++;
 }
 
@@ -167,7 +167,7 @@ with the ordering produced by the comparison function specified when the contain
 if not, the result is undefined. */
 void* OC_find_item_arg(const struct Ordered_container* c_ptr, const void* arg_ptr, OC_find_item_arg_fp_t fafp)
 {
-	struct Search_Result result = OC_binary_search(c_ptr, data_ptr, c_ptr->comp_fun);
+	struct Search_Result result = OC_binary_search(c_ptr, arg_ptr, c_ptr->comp_fun);
 	if (result.found)
 	{
 		return c_ptr->array[result.index];
@@ -217,7 +217,7 @@ Private helper functions
 */
 
 /* Searches for the specified element using the given comparison function */
-static struct Search_Result OC_binary_search(struct Ordered_container* c_ptr, const void* data_ptr, OC_comp_fp_t comp_fun)
+static struct Search_Result OC_binary_search(const struct Ordered_container* c_ptr, const void* data_ptr, OC_comp_fp_t comp_fun)
 {
 	struct Search_Result result;
 	int left = 0;
