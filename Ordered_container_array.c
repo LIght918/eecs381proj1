@@ -47,12 +47,15 @@ static int OC_take_value_from_left(void* item_ptr);
 /* Grabs the data ptr from the item directly after this item*/
 static int OC_take_value_from_right(void* item_ptr);
 
+/* Type of function used to pass function pointers around OC_apply functions */
+typedef void(*OC_apply_template_fp_t) (void);
+
 /* Type of function used by OC_apply for APPLY_INTERNAL */
 typedef int(*OC_apply_internal_fp_t) (void* item_ptr);
 
 /* Helper function for OC_apply functions
 Performed on range [start, end), in order depending on reverse */
-static int OC_apply_helper(const struct Ordered_container* c_ptr, void* afp, void* arg_ptr, apply_enum apply_func, int start, int end, int reverse);
+static int OC_apply_helper(const struct Ordered_container* c_ptr, OC_apply_template_fp_t afp, void* arg_ptr, apply_enum apply_func, int start, int end, int reverse);
 
 /* Simplified call to OC_apply_helper */
 static int OC_apply_helper_simple(const struct Ordered_container* c_ptr, void* afp, void* arg_ptr, apply_enum apply_func);
@@ -64,7 +67,7 @@ Functions for the entire container.
 /* Create an empty container using the supplied comparison function, and return the pointer to it. */
 struct Ordered_container* OC_create_container(OC_comp_fp_t f_ptr)
 {
-	struct Ordered_container *c_ptr = (Ordered_container*)malloc(sizeof(struct Ordered_container));
+	struct Ordered_container *c_ptr = (struct Ordered_container*)malloc(sizeof(struct Ordered_container));
 	c_ptr->comp_fun = f_ptr;
 	OC_initialize_container(c_ptr);
 	g_Container_count++;
@@ -119,7 +122,7 @@ void* OC_get_data_ptr(const void* item_ptr)
 Caller is responsible for any deletion of the data pointed to by the item. */
 void OC_delete_item(struct Ordered_container* c_ptr, void* item_ptr)
 {
-	OC_apply_helper(c_ptr, OC_take_value_from_right, NULL, APPLY_INTERNAL, item_ptr - c_ptr->array, c_ptr->size - 1, 0);
+	OC_apply_helper(c_ptr, OC_take_value_from_right, NULL, APPLY_INTERNAL, (void **)item_ptr - c_ptr->array, c_ptr->size - 1, 0);
 	c_ptr->size--;
 	g_Container_items_in_use--;
 }
@@ -181,7 +184,7 @@ void* OC_find_item_arg(const struct Ordered_container* c_ptr, const void* arg_pt
 The contents of the container cannot be modified. */
 void OC_apply(const struct Ordered_container* c_ptr, OC_apply_fp_t afp)
 {
-	OC_apply_helper_simple(c_ptr, afp, NULL, APPLY);
+	OC_apply_helper_simple(c_ptr, (OC_apply_template_fp_t)afp, NULL, APPLY);
 }
 
 /* Apply the supplied function to the data pointer in each item in the container.
@@ -189,7 +192,7 @@ If the function returns non-zero, the iteration is terminated, and that value
 returned. Otherwise, zero is returned. The contents of the container cannot be modified. */
 int OC_apply_if(const struct Ordered_container* c_ptr, OC_apply_if_fp_t afp)
 {
-	return OC_apply_helper_simple(c_ptr, afp, NULL, APPLY_IF);
+	return OC_apply_helper_simple(c_ptr, (OC_apply_template_fp_t)afp, NULL, APPLY_IF);
 }
 
 /* Apply the supplied function to the data pointer in each item in the container;
@@ -197,7 +200,7 @@ the function takes a second argument, which is the supplied void pointer.
 The contents of the container cannot be modified. */
 void OC_apply_arg(const struct Ordered_container* c_ptr, OC_apply_arg_fp_t afp, void* arg_ptr)
 {
-	OC_apply_helper_simple(c_ptr, afp, arg_ptr, APPLY);
+	OC_apply_helper_simple(c_ptr, (OC_apply_template_fp_t)afp, arg_ptr, APPLY);
 }
 
 /* Apply the supplied function to the data pointer in each item in the container;
@@ -206,7 +209,7 @@ If the function returns non-zero, the iteration is terminated, and that value
 returned. Otherwise, zero is returned. The contents of the container cannot be modified */
 int OC_apply_if_arg(const struct Ordered_container* c_ptr, OC_apply_if_arg_fp_t afp, void* arg_ptr)
 {
-	return OC_apply_helper_simple(c_ptr, afp, arg_ptr, APPLY);
+	return OC_apply_helper_simple(c_ptr, (OC_apply_template_fp_t)afp, arg_ptr, APPLY);
 }
 
 /*
@@ -282,7 +285,7 @@ static int OC_take_value_from_right(void* item_ptr)
 
 /* Helper function for OC_apply functions
 Performed on range [start, end), in order depending on reverse */
-static int OC_apply_helper(const struct Ordered_container* c_ptr, void* afp, void* arg_ptr, apply_enum apply_func, int start, int end, int reverse)
+static int OC_apply_helper(const struct Ordered_container* c_ptr, OC_apply_template_fp_t afp, void* arg_ptr, apply_enum apply_func, int start, int end, int reverse)
 {
 	int i;
 	for (i = (reverse ? end : start); (reverse ? i >= 0 : i < end); (reverse ? i-- : i++))
@@ -320,7 +323,7 @@ static int OC_apply_helper(const struct Ordered_container* c_ptr, void* afp, voi
 }
 
 /* Simplified call to OC_apply_helper */
-static int OC_apply_helper_simple(const struct Ordered_container* c_ptr, void* afp, void* arg_ptr, apply_enum apply_func)
+static int OC_apply_helper_simple(const struct Ordered_container* c_ptr, OC_apply_template_fp_t afp, void* arg_ptr, apply_enum apply_func)
 {
 	return OC_apply_helper(c_ptr, afp, arg_ptr, apply_func, comp_func, 0, c_ptr->size, 0);
 }
