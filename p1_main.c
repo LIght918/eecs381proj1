@@ -82,7 +82,7 @@ int main()
 	while (1)
 	{
 		printf("\nEnter command: ");
-		if (scanf("%c%c", &action, &object) == 2)
+		if (scanf("\n%c%c", &action, &object) == 2)
 		{
 			printf("you entered %c %c\n", action, object);
 			switch (action)
