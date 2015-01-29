@@ -158,7 +158,7 @@ void OC_insert(struct Ordered_container* c_ptr, const void* data_ptr)
 			printf("apply helper done\n");
 			index_for_insert = result.index;
 	}
-	c_ptr->array[index_for_insert] = data_ptr;
+	c_ptr->array[index_for_insert] = (void*)data_ptr;
 	c_ptr->size++;
 	printf("inserted into array\n");
 	g_Container_items_in_use++;
