@@ -84,7 +84,7 @@ int main()
 		printf("\nEnter command: ");
 		if (scanf("%c%c", &action, &object) == 2)
 		{
-			print("you entered %c %c\n", action, object);
+			printf("you entered %c %c\n", action, object);
 			switch (action)
 			{
 				case 'f': /* find (records only) */
