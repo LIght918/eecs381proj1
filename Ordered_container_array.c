@@ -142,7 +142,6 @@ the comparison function, the order of the new item relative to the existing item
 This function will not modify the pointed-to data. */
 void OC_insert(struct Ordered_container* c_ptr, const void* data_ptr)
 {
-	printf("inserting into container\n");
 	struct Search_Result result = OC_binary_search(c_ptr, data_ptr, c_ptr->comp_fun);
 	printf("search made\n");
 	if (c_ptr->size == c_ptr->allocation)
