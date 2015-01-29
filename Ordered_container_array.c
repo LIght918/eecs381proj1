@@ -240,10 +240,12 @@ static struct Search_Result OC_binary_search(const struct Ordered_container* c_p
 	int left = 0;
 	int right = c_ptr->size - 1;
 	int middle = (left + right) / 2;
+	printf("binary searching\n");
 	result.found = 0;
 	while (left <= right)
 	{
-		int comparison = comp_fun(c_ptr->array[middle], data_ptr);
+		int comparison = comp_fun(OC_get_data_ptr(c_ptr->array[middle]), data_ptr);
+		printf("left = %d\nright = %d\nmiddle = %d\ncomparison = %d\n", left, right, middle, comparison);
 		if (comparison < 0)
 		{
 			left = middle + 1;
@@ -316,9 +318,11 @@ static int OC_apply_helper(const struct Ordered_container* c_ptr, OC_apply_templ
 		switch (apply_func)
 		{
 		case APPLY:
+			printf("case apply\n");
 			((OC_apply_fp_t)afp)(OC_get_data_ptr(item_ptr));
 			break;
 		case APPLY_IF:
+			printf("case apply if\n");
 			function_return = ((OC_apply_if_fp_t)afp)(OC_get_data_ptr(item_ptr));
 			if (function_return)
 			{
@@ -326,9 +330,11 @@ static int OC_apply_helper(const struct Ordered_container* c_ptr, OC_apply_templ
 			}
 			break;
 		case APPLY_ARG:
+			printf("case apply arg\n");
 			((OC_apply_arg_fp_t)afp)(OC_get_data_ptr(item_ptr), arg_ptr);
 			break;
 		case APPLY_ARG_IF:
+			printf("case apply arg if\n");
 			function_return = ((OC_apply_if_arg_fp_t)afp)(OC_get_data_ptr(item_ptr), arg_ptr);
 			if (function_return)
 			{
@@ -336,6 +342,7 @@ static int OC_apply_helper(const struct Ordered_container* c_ptr, OC_apply_templ
 			}
 			break;
 		case APPLY_INTERNAL:
+			printf("case internal\n");
 			((OC_apply_internal_fp_t)afp)(item_ptr);
 			break;
 		}
