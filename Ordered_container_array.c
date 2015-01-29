@@ -158,7 +158,7 @@ void OC_insert(struct Ordered_container* c_ptr, const void* data_ptr)
 			printf("apply helper done\n");
 			index_for_insert = result.index;
 	}
-	c_ptr->array[index_for_insert] = (void*)data_ptr;
+	c_ptr->array[index_for_insert] = data_ptr;
 	c_ptr->size++;
 	printf("inserted into array\n");
 	g_Container_items_in_use++;
@@ -241,6 +241,7 @@ static struct Search_Result OC_binary_search(const struct Ordered_container* c_p
 	int right = c_ptr->size - 1;
 	int middle = (left + right) / 2;
 	printf("binary searching\n");
+	printf("data ptr = %p\n", data_ptr);
 	result.found = 0;
 	while (left <= right)
 	{

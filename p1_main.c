@@ -238,7 +238,7 @@ int main()
 							}
 							printf("no item there\n");
 							record = create_Record(medium, title);
-							printf("record created\n");
+							printf("record = %p\n", (void*)record);
 							OC_insert(library_title, record);
 							printf("library title inserted\n");
 							OC_insert(library_id, record);
