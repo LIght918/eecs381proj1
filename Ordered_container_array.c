@@ -151,7 +151,7 @@ void OC_insert(struct Ordered_container* c_ptr, const void* data_ptr)
 		printf("allocated\n");
 	}
 	printf("done with allocation\n");
-	OC_apply_helper(c_ptr, (OC_apply_template_fp_t)OC_take_value_from_left, NULL, APPLY_INTERNAL, result.index + 1, c_ptr->size, 1);
+	OC_apply_helper(c_ptr, (OC_apply_template_fp_t)OC_take_value_from_left, NULL, APPLY_INTERNAL, result.index, c_ptr->size, 1);
 	printf("apply helper done\n");
 	c_ptr->array[result.index] = (void*)data_ptr;
 	c_ptr->size++;
