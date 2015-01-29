@@ -46,12 +46,12 @@ char * read_title(char *title, FILE *infile)
 		return NULL;
 	}
 	/* find the first block of whitespace characters */
-	while (title_start < title_end && !isspace((int)*(title_start++))) {}
+	while (title_start < title_end && !isspace(*(title_start++))) {}
 	/* find the end of the first whitespace block */
-	while (title_start < title_end && isspace((int)*(title_start++))) {}
+	while (title_start < title_end && isspace(*(title_start++))) {}
 	/* find the beginning of the terminating whitespace */
-	while (title_start < title_end && isspace((int)*(title_end--))) {}
-	if (isspace((int)*(title_start)) || isspace((int)*(title_end)))
+	while (title < title_end && isspace(*(title_end--))) {}
+	if (title_start > title_end)
 	{
 		/* title read error */
 		return NULL;
