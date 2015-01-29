@@ -45,18 +45,17 @@ char * read_title(char *title, FILE *infile)
 		/* title read error */
 		return NULL;
 	}
-	/* find the first block of whitespace characters */
-	while (title_start < title_end && !isspace(*(title_start++))) {}
-	/* find the end of the first whitespace block */
+	/* find the end of the leading whitespace */
 	while (title_start < title_end && isspace(*(title_start++))) {}
-	/* find the beginning of the terminating whitespace */
+	title_start--; /* while loop aboves goes one past */
+	/* find the beginning of the trailing whitespace */
 	while (title < title_end && isspace(*(title_end--))) {}
-	if (title_start > title_end)
+	title_end++; /* while loop aboves goes one past */
+	if (title_start >= title_end)
 	{
 		/* title read error */
 		return NULL;
 	}
-	title_end++;
 	/* set the first character of the terminating whitespace to \0 */
 	*(title_end + 1) = '\0';
 	return --title_start;
