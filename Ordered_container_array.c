@@ -142,23 +142,18 @@ the comparison function, the order of the new item relative to the existing item
 This function will not modify the pointed-to data. */
 void OC_insert(struct Ordered_container* c_ptr, const void* data_ptr)
 {
-	int index_for_insert = 0;
-	if (c_ptr->size > 0)
+	struct Search_Result result = OC_binary_search(c_ptr, data_ptr, c_ptr->comp_fun);
+	printf("result index = %d\n", result.index);
+	if (c_ptr->size == c_ptr->allocation)
 	{
-			struct Search_Result result = OC_binary_search(c_ptr, data_ptr, c_ptr->comp_fun);
-			printf("result index = %d\n", result.index);
-			if (c_ptr->size == c_ptr->allocation)
-			{
-				printf("need to allocate\n");
-				OC_reallocate_array(c_ptr);
-				printf("allocated\n");
-			}
-			printf("done with allocation\n");
-			OC_apply_helper(c_ptr, (OC_apply_template_fp_t)OC_take_value_from_left, NULL, APPLY_INTERNAL, result.index + 1, c_ptr->size, 1);
-			printf("apply helper done\n");
-			index_for_insert = result.index;
+		printf("need to allocate\n");
+		OC_reallocate_array(c_ptr);
+		printf("allocated\n");
 	}
-	c_ptr->array[index_for_insert] = (void*)data_ptr;
+	printf("done with allocation\n");
+	OC_apply_helper(c_ptr, (OC_apply_template_fp_t)OC_take_value_from_left, NULL, APPLY_INTERNAL, result.index + 1, c_ptr->size, 1);
+	printf("apply helper done\n");
+	c_ptr->array[result.index] = (void*)data_ptr;
 	c_ptr->size++;
 	printf("inserted into array\n");
 	g_Container_items_in_use++;
@@ -263,6 +258,7 @@ static struct Search_Result OC_binary_search(const struct Ordered_container* c_p
 		middle = (left + right) / 2;
 	}
 	result.index = middle;
+	printf("found = %d\nindex = %d\n", result.found, result.index);
 	return result;
 }
 

@@ -223,14 +223,14 @@ int main()
 								title_read_error();
 								break;
 							}
-							printf("scanf works\n");
+							printf("medium is %s\n", medium);
 							title = read_title(title_buffer, stdin);
 							if (!title)
 							{
 								title_read_error();
 								break;
 							}
-							printf("got item\n");
+							printf("title is %s\n", title);
 							if (OC_find_item_arg(library_title, title, record_title_compare) != 0)
 							{
 								message_and_error("Library already has a record with this title!\n");
