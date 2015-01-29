@@ -51,11 +51,12 @@ char * read_title(char *title, FILE *infile)
 	while (title_start < title_end && isspace((int)*(title_start++))) {}
 	/* find the beginning of the terminating whitespace */
 	while (title_start < title_end && isspace((int)*(title_end--))) {}
-	if (title_start == title_end)
+	if (isspace((int)*(title_start)) || isspace((int)*(title_end)))
 	{
 		/* title read error */
 		return NULL;
 	}
+	title_end++;
 	/* set the first character of the terminating whitespace to \0 */
 	*(title_end + 1) = '\0';
 	return --title_start;
