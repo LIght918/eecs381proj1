@@ -187,7 +187,7 @@ void* OC_find_item_arg(const struct Ordered_container* c_ptr, const void* arg_pt
 	struct Search_Result result = OC_binary_search(c_ptr, arg_ptr, c_ptr->comp_fun);
 	if (result.found)
 	{
-		return c_ptr->array[result.index];
+		return c_ptr->array + result.index;
 	}
 	else
 	{
@@ -244,7 +244,7 @@ static struct Search_Result OC_binary_search(const struct Ordered_container* c_p
 	result.found = 0;
 	while (left <= right)
 	{
-		int comparison = comp_fun(OC_get_data_ptr(c_ptr->array[middle]), data_ptr);
+		int comparison = comp_fun(c_ptr->array[middle], data_ptr);
 		printf("left = %d\nright = %d\nmiddle = %d\ncomparison = %d\n", left, right, middle, comparison);
 		if (comparison < 0)
 		{
