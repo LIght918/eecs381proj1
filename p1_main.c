@@ -217,24 +217,30 @@ int main()
 							char title_buffer[BUFFER_SIZE];
 							char *title;
 							struct Record *record;
+							printf("hello\n");
 							if (scanf(SCAN_BUFFER, medium) != 1)
 							{
 								title_read_error();
 								break;
 							}
+							printf("scanf works\n");
 							title = read_title(title_buffer, stdin);
 							if (!title)
 							{
 								title_read_error();
 								break;
 							}
+							printf("got item\n");
 							if (OC_find_item_arg(library_title, title, record_title_compare) != 0)
 							{
 								message_and_error("Library already has a record with this title!\n");
 								break;
 							}
+							printf("no item there\n");
 							record = create_Record(medium, title);
+							printf("record created\n");
 							OC_insert(library_title, record);
+							printf("library title inser\n");
 							OC_insert(library_id, record);
 							printf("Record %d added\n", get_Record_ID(record));
 							break;
