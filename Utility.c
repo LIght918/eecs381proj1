@@ -37,26 +37,42 @@ int record_id_compare(const void* id, const void* record)
 /* Read in a title from the specified file, returns pointer to the title on success and a NULL on failure */
 char * read_title(char *title, FILE *infile)
 {
-	char *title_start = title;
-	char *title_end = title + strlen(title);
+	char *title_start = NULL;
+	char *title_end = NULL;
+	int i;
 	/* note: title + SCAN_BUFFER_SIZE is the last character, which must be \0...we want the character before*/
 	if (!fgets(title, BUFFER_SIZE, infile))
 	{
 		/* title read error */
 		return NULL;
 	}
-	/* find the end of the leading whitespace */
-	while (title_start < title_end && isspace(*(title_start++))) {}
-	title_start--; /* while loop aboves goes one past */
-	/* find the beginning of the trailing whitespace */
-	while (title < title_end && isspace(*(title_end--))) {}
-	title_end++; /* while loop aboves goes one past */
-	if (title_start >= title_end)
+	for (i = 0; i < strlen(title); i++)
+	{
+		if (!isspace(*(title + i)))
+		{
+			title_start = title + i;
+			break;
+		}
+	}
+	if (title_start == NULL)
+	{
+		/* title read error */
+		return NULL;
+	}
+	for (i = strlen(title) - 1; i >= 0; i--)
+	{
+		if (!isspace(*(title + i)))
+		{
+			title_end = title + i + 1;
+			break;
+		}
+	}
+	if (title_end == NULL)
 	{
 		/* title read error */
 		return NULL;
 	}
 	/* set the first character of the terminating whitespace to \0 */
-	*(title_end + 1) = '\0';
+	*title_end = '\0';
 	return --title_start;
 }
