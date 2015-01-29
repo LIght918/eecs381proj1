@@ -179,7 +179,7 @@ with the ordering produced by the comparison function specified when the contain
 if not, the result is undefined. */
 void* OC_find_item_arg(const struct Ordered_container* c_ptr, const void* arg_ptr, OC_find_item_arg_fp_t fafp)
 {
-	struct Search_Result result = OC_binary_search(c_ptr, arg_ptr, c_ptr->comp_fun);
+	struct Search_Result result = OC_binary_search(c_ptr, arg_ptr, fafp);
 	if (result.found)
 	{
 		return c_ptr->array + result.index;
