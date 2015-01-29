@@ -105,6 +105,7 @@ int main()
 							break;
 						}
 					}
+					break;
 				}
 				case 'p': /* print */
 				{
@@ -173,6 +174,7 @@ int main()
 							break;
 						}
 					}
+					break;
 				}
 				case 'm': /* modify (rating only) */
 				{
@@ -202,6 +204,7 @@ int main()
 							break;
 						}
 					}
+					break;
 				}
 				case 'a': /* add */
 				{
@@ -278,6 +281,7 @@ int main()
 							break;
 						}
 					}
+					break;
 				}
 				case 'd': /* delete */
 				{
@@ -337,6 +341,7 @@ int main()
 							break;
 						}
 					}
+					break;
 				}
 				case 'c': /* clear */
 				{
@@ -373,6 +378,7 @@ int main()
 							break;
 						}
 					}
+					break;
 				}
 				case 's': /* save */
 				{
@@ -398,6 +404,7 @@ int main()
 							break;
 						}
 					}
+					break;
 				}
 				case 'r': /* restore */
 				{
@@ -459,6 +466,7 @@ int main()
 							break;
 						}
 					}
+					break;
 				}
 				case 'q': /* quit */
 				{
@@ -475,6 +483,7 @@ int main()
 							break;
 						}
 					}
+					break;
 				}
 				default:
 				{
