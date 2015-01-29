@@ -80,5 +80,5 @@ char * read_title(char *title, FILE *infile)
 	}
 	/* set the first character of the terminating whitespace to \0 */
 	*title_end = '\0';
-	return --title_start;
+	return title_start;
 }
