@@ -142,13 +142,20 @@ the comparison function, the order of the new item relative to the existing item
 This function will not modify the pointed-to data. */
 void OC_insert(struct Ordered_container* c_ptr, const void* data_ptr)
 {
+	printf("inserting into container\n");
 	struct Search_Result result = OC_binary_search(c_ptr, data_ptr, c_ptr->comp_fun);
+	printf("search made\n");
 	if (c_ptr->size == c_ptr->allocation)
 	{
+		printf("need to allocate\n");
 		OC_reallocate_array(c_ptr);
+		printf("allocated\n");
 	}
+	printf("done with allocation\n");
 	OC_apply_helper(c_ptr, (OC_apply_template_fp_t)OC_take_value_from_left, NULL, APPLY_INTERNAL, result.index + 1, c_ptr->size, 1);
+	printf("apply helper done\n");
 	c_ptr->array[result.index] = (void*)data_ptr;
+	printf("inserted into array\n");
 	g_Container_items_in_use++;
 }
 

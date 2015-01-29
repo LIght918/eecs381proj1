@@ -240,7 +240,7 @@ int main()
 							record = create_Record(medium, title);
 							printf("record created\n");
 							OC_insert(library_title, record);
-							printf("library title inser\n");
+							printf("library title inserted\n");
 							OC_insert(library_id, record);
 							printf("Record %d added\n", get_Record_ID(record));
 							break;
