@@ -5,6 +5,10 @@
 #include "p1_globals.h"
 #include <stdio.h>
 
+#define BUFFER_SIZE 64
+#define SCAN_BUFFER "%63s"
+#define TITLE_BUFFER_END 62
+
 /* Print a record */
 void record_print(void* record);
 

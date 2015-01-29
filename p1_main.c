@@ -52,6 +52,12 @@ void clear_all(struct Ordered_container *catalog, struct Ordered_container *libr
 /* Reads in filename and open file with given mode */
 FILE * read_filename_open_file(char * mode);
 
+/* Flushes the stream until the next \n */
+void flush_stream(void);
+
+/* Prints message and flushes */
+void message_and_error(char * message);
+
 /* Action Object input error message */
 void action_object_input_error(void);
 
@@ -153,8 +159,8 @@ int main()
 						case 'a': /* print memory allocations */
 						{
 							printf("Memory allocations:\n");
-							printf("Records: %d\n", g_Record_count);
-							printf("Collections: %d\n", g_Collection_count);
+							printf("Records: %d\n", OC_get_size(library_title));
+							printf("Collections: %d\n", OC_get_size(catalog));
 							printf("Containers: %d\n", g_Container_count);
 							printf("Container items in use: %d\n", g_Container_items_in_use);
 							printf("Container items allocated: %d\n", g_Container_items_allocated);
@@ -183,7 +189,7 @@ int main()
 							}
 							if (rating < 0 || rating > 10)
 							{
-								printf("Rating is out of range!\n");
+								message_and_error("Rating is out of range!\n");
 								break;
 							}
 							set_Record_rating(item, rating);
@@ -220,7 +226,7 @@ int main()
 							}
 							if (OC_find_item_arg(library_title, title, record_title_compare) != 0)
 							{
-								printf("Library already has a record with this title!\n");
+								message_and_error("Library already has a record with this title!\n");
 								break;
 							}
 							record = create_Record(medium, title);
@@ -240,7 +246,7 @@ int main()
 							}
 							if (OC_find_item_arg(catalog, name, collection_name_compare) != 0)
 							{
-								printf("Catalog already has a collection with this name!\n");
+								message_and_error("Catalog already has a collection with this name!\n");
 								break;
 							}
 							collection = create_Collection(name);
@@ -262,7 +268,7 @@ int main()
 							}
 							else
 							{
-								printf("Record is already a member in the collection!\n");
+								message_and_error("Record is already a member in the collection!\n");
 							}
 							break;
 						}
@@ -288,7 +294,7 @@ int main()
 							is_member = OC_apply_if_arg(catalog, collection_contains, item);
 							if (is_member)
 							{
-								printf("Cannot delete a record that is a member of a collection!\n");
+								message_and_error("Cannot delete a record that is a member of a collection!\n");
 								break;
 							}
 							OC_delete_item(library_title, item);
@@ -321,7 +327,7 @@ int main()
 							}
 							else
 							{
-								printf("Record is not a member in the collection!\n");
+								message_and_error("Record is not a member in the collection!\n");
 							}
 							break;
 						}
@@ -341,7 +347,7 @@ int main()
 							int has_members = OC_apply_if(catalog, Collection_not_empty);
 							if (has_members)
 							{
-								printf("Cannot clear all records unless all collections are empty!\n");
+								message_and_error("Cannot clear all records unless all collections are empty!\n");
 								break;
 							}
 							deallocate_and_clear(library_title);
@@ -536,7 +542,7 @@ struct Record * read_title_get_record(struct Ordered_container *library_title)
 	item = OC_find_item_arg(library_title, title, record_title_compare);
 	if (!item)
 	{
-		printf("No record with that title!\n");
+		message_and_error("No record with that title!\n");
 	}
 	return item;
 }
@@ -554,7 +560,7 @@ struct Record * read_id_get_record(struct Ordered_container *library_id)
 	item = OC_find_item_arg(library_id, &id, record_id_compare);
 	if (!item)
 	{
-		printf("No record with that ID!\n");
+		message_and_error("No record with that ID!\n");
 	}
 	return item;
 }
@@ -624,33 +630,46 @@ FILE * read_filename_open_file(char * mode)
 	return file;
 }
 
+/* Flushes the stream until the next \n */
+void flush_stream(void)
+{
+	while (getc(stdin) != '\n');
+}
+
+/* Prints message and flushes */
+void message_and_error(char * message)
+{
+	printf(message);
+	flush_stream();
+}
+
 /* Action Object input error message */
 void action_object_input_error(void)
 {
-	printf("Unrecognized command!\n");
+	message_and_error("Unrecognized command!\n");
 }
 
 /* Title read error message */
 void title_read_error(void)
 {
-	printf("Could not read a title!\n");
+	message_and_error("Could not read a title!\n");
 }
 
 /* Integer read error message */
 void integer_read_error(void)
 {
-	printf("Could not read an integer value!\n");
+	message_and_error("Could not read an integer value!\n");
 }
 
 /* File open error message */
 void file_open_error(void)
 {
-	printf("Could not open file!\n");
+	message_and_error("Could not open file!\n");
 }
 
 /* File invalid error message and closes file */
 void file_invalid_error(FILE *file)
 {
-	printf("Invalid data found in file!\n");
+	message_and_error("Invalid data found in file!\n");
 	fclose(file);
 }

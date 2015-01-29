@@ -14,8 +14,6 @@ struct Collection {
 	struct Ordered_container* members; 
 };
 
-extern int g_Collection_count;		/* global to store number of collections */
-
 /* Used to save all members of the collection */
 void save_one_record(void* record, void* current_file);
 
@@ -29,7 +27,6 @@ struct Collection* create_Collection(const char* name)
 	g_string_memory += name_len;
 	collection->name = strcpy(malloc(name_len), name);
 	collection->members = OC_create_container(record_compare_title);
-	g_Collection_count++;
 	return collection;
 }
 
@@ -41,7 +38,6 @@ void destroy_Collection(struct Collection* collection_ptr)
 {
 	free(collection_ptr->name);
 	OC_destroy_container(collection_ptr->members);
-	g_Collection_count--;
 	free(collection_ptr);
 }
 

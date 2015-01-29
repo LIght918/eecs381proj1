@@ -16,8 +16,6 @@ struct Record {
 
 static int next_record_id;		/* next record id to be assigned */
 
-extern int g_Record_count;		/* global to store number of records */
-
 /* Create a Record object, giving it the next ID number using the ID number counter.
 The function that allocates dynamic memory for a Record and the contained data. The rating is set to 0. */
 struct Record* create_Record(const char* medium, const char* title)
@@ -30,7 +28,6 @@ struct Record* create_Record(const char* medium, const char* title)
 	record->title = strcpy(malloc(title_len), title);
 	record->rating = 0;
 	record->ID = next_record_id++;
-	g_Record_count++;
 	return record;
 }
 
@@ -42,7 +39,6 @@ void destroy_Record(struct Record* record_ptr)
 	free(record_ptr->title);
 	free(record_ptr->medium);
 	free(record_ptr);
-	g_Record_count--;
 }
 
 /* Accesssors */
