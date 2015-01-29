@@ -236,7 +236,7 @@ int main()
 								message_and_error("Library already has a record with this title!\n");
 								break;
 							}
-							printf("no item there\n");
+							printf("not pre existing\n");
 							record = create_Record(medium, title);
 							printf("record = %p\n", (void*)record);
 							OC_insert(library_title, record);
