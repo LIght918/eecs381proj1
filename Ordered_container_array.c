@@ -240,9 +240,9 @@ static struct Search_Result OC_binary_search(const struct Ordered_container* c_p
 	result.found = 0;
 	while (left <= right)
 	{
-		int comparison = comp_fun(c_ptr->array[middle], data_ptr);
+		int comparison = comp_fun(data_ptr, c_ptr->array[middle]);
 		printf("left = %d\nright = %d\nmiddle = %d\ncomparison = %d\n", left, right, middle, comparison);
-		if (comparison < 0)
+		if (comparison > 0)
 		{
 			left = middle + 1;
 		}
