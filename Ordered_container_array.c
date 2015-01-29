@@ -301,7 +301,7 @@ Performed on range [start, end), in order depending on reverse */
 static int OC_apply_helper(const struct Ordered_container* c_ptr, OC_apply_template_fp_t afp, void* arg_ptr, apply_enum apply_func, int start, int end, int reverse)
 {
 	int i;
-	for (i = (reverse ? end : start); (reverse ? i >= 0 : i < end); (reverse ? i-- : i++))
+	for (i = (reverse ? end - 1 : start); (reverse ? i >= 0 : i < end); (reverse ? i-- : i++))
 	{
 		int function_return;
 		void **item_ptr = c_ptr->array[i];
