@@ -507,7 +507,7 @@ int main()
 /* Safely acquires data ptr of an item ptr */
 void *OC_safe_data_ptr(void *item_ptr)
 {
-	if (item_ptr = NULL)
+	if (item_ptr == NULL)
 	{
 		return NULL;
 	}
