@@ -6,8 +6,6 @@
 #include "p1_globals.h"
 #include <stdlib.h>
 
-#include <stdio.h>
-
 #define SIZE_FACTOR 2
 #define ALLOCATION_INCREASE 1
 #define INITIAL_ALLOCATION 3
