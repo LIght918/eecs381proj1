@@ -104,6 +104,7 @@ int main()
 		printf("\nEnter command: ");
 		if (scanf(ACTION_OBJECT_READ, &action, &object) == 2)
 		{
+			printf("read %s and %s\n", action, object);
 			switch (action)
 			{
 				case 'f': /* find (records only) */
