@@ -121,10 +121,10 @@ int compare_int(const int * data_ptr1, const int * data_ptr2)
 void find_and_remove(struct Ordered_container * container, int * probe)
 {
 	void * found_item;
-	printf("\nsearch for %d:\n", probe);
+	printf("\nsearch for %d:\n", *probe);
 	found_item = OC_find_item(container, probe);
 	if(found_item) {
-		printf("found item points to %d\n", (int *)OC_get_data_ptr(found_item));
+		printf("found %d\n", *((int *)OC_get_data_ptr(found_item)));
 		OC_delete_item(container, found_item);
 		printf("item removed\n");
 	}
