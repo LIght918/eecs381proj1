@@ -515,6 +515,9 @@ int main()
 			}
 		}
 	}
+	free(catalog);
+	free(library_title);
+	free(library_id);
 }
 
 /* Safely acquires data ptr of an item ptr */
