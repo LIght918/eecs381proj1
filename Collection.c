@@ -137,7 +137,7 @@ struct Collection* load_Collection(FILE* input_file, const struct Ordered_contai
 			destroy_Collection(collection);
 			return NULL;
 		}
-		item = OC_find_item_arg(collection->members, title, record_title_compare);
+		item = OC_find_item_arg(records, title, record_title_compare);
 		if (item == NULL)
 		{
 			/* title not found in library */
