@@ -239,6 +239,7 @@ static struct Search_Result OC_binary_search(const struct Ordered_container* c_p
 	printf("binary searching\n");
 	printf("data ptr = %p\n", data_ptr);
 	result.found = 0;
+	result.index = 0;
 	while (left <= right)
 	{
 		middle = (left + right) / 2;
@@ -248,18 +249,20 @@ static struct Search_Result OC_binary_search(const struct Ordered_container* c_p
 		if (comparison > 0)
 		{
 			left = middle + 1;
+			result.index = left;
 		}
 		else if (comparison == 0)
 		{
 			result.found = 1;
+			result.index = middle;
 			break;
 		}
 		else
 		{
 			right = middle - 1;
+			result.index = right;
 		}
 	}
-	result.index = middle;
 	printf("found = %d\nindex = %d\n", result.found, result.index);
 	return result;
 }
@@ -292,14 +295,14 @@ static void OC_reallocate_array(struct Ordered_container* c_ptr)
 /* Grabs the data ptr from the item directly preceding this item*/
 static int OC_take_value_from_left(void* item_ptr)
 {
-	item_ptr = OC_get_data_ptr((void**)item_ptr - 1);
+	item_ptr = item_ptr - 1;
 	return 0;
 }
 
 /* Grabs the data ptr from the item directly after this item*/
 static int OC_take_value_from_right(void* item_ptr)
 {
-	item_ptr = OC_get_data_ptr((void**)item_ptr + 1);
+	item_ptr = item_ptr + 1;
 	return 0;
 }
 
