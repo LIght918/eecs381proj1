@@ -115,11 +115,13 @@ struct Collection* load_Collection(FILE* input_file, const struct Ordered_contai
 	if (fscanf(input_file, SCAN_BUFFER, collection_name) != 1)
 	{
 		/* error reading name */
+		printf("error reading name\n");
 		return NULL;
 	}
 	if (fscanf(input_file, "%d\n", &elements) != 1)
 	{
 		/* error reading size */
+		printf("error reading size\n");
 		return NULL;
 	}
 	collection = create_Collection(collection_name);
@@ -131,6 +133,7 @@ struct Collection* load_Collection(FILE* input_file, const struct Ordered_contai
 		if (title == NULL)
 		{
 			/* error reading record title */
+			printf("error reading record title\n");
 			destroy_Collection(collection);
 			return NULL;
 		}
@@ -138,6 +141,7 @@ struct Collection* load_Collection(FILE* input_file, const struct Ordered_contai
 		if (item == NULL)
 		{
 			/* title not found in library */
+			printf("error title not found in library\n");
 			destroy_Collection(collection);
 			return NULL;
 		}
