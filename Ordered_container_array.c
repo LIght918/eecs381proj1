@@ -47,10 +47,10 @@ static void OC_initialize_container(struct Ordered_container* c_ptr);
 static void OC_reallocate_array(struct Ordered_container* c_ptr);
 
 /* Grabs the data ptr from the item directly preceding this item*/
-static int OC_take_value_from_left(void* item_ptr);
+static int OC_take_value_from_left(struct Ordered_container* c_ptr, int i);
 
 /* Grabs the data ptr from the item directly after this item*/
-static int OC_take_value_from_right(void* item_ptr);
+static int OC_take_value_from_right(struct Ordered_container* c_ptr, int i);
 
 /* Type of function used to pass function pointers around OC_apply functions */
 typedef void(*OC_apply_template_fp_t) (void);
@@ -303,14 +303,14 @@ static void OC_reallocate_array(struct Ordered_container* c_ptr)
 /* Grabs the data ptr from the item directly preceding this item*/
 static int OC_take_value_from_left(struct Ordered_container* c_ptr, int i)
 {
-	(c_ptr->array + i) = c_ptr->array[i - 1];
+	c_ptr->array[i] = c_ptr->array[i - 1];
 	return 0;
 }
 
 /* Grabs the data ptr from the item directly after this item*/
 static int OC_take_value_from_right(struct Ordered_container* c_ptr, int i)
 {
-	(c_ptr->array + i) = c_ptr->array[i + 1];
+	c_ptr->array[i] = c_ptr->array[i + 1];
 	return 0;
 }
 
