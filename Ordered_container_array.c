@@ -157,6 +157,14 @@ void OC_insert(struct Ordered_container* c_ptr, const void* data_ptr)
 	c_ptr->array[result.index] = (void*)data_ptr;
 	printf("inserted into array\n");
 	g_Container_items_in_use++;
+
+	{
+		int i;
+		for (i = 0; i < c_ptr->size; i++)
+		{
+			printf("%d: %p\n", i, c_ptr->array[i]);
+		}
+	}
 }
 
 /* Return a pointer to an item that points to data equal to the data object pointed to by data_ptr,
