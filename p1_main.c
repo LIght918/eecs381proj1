@@ -238,7 +238,7 @@ int main()
 							printf("title is %s\n", title);
 							if (OC_find_item_arg(library_title, title, record_title_compare) != 0)
 							{
-								message_and_error("Library already has a record with this title!\n");
+								message_and_error_noflush("Library already has a record with this title!\n");
 								break;
 							}
 							printf("not pre existing\n");
@@ -573,7 +573,7 @@ struct Record * read_title_get_record(struct Ordered_container *library_title)
 	item = OC_safe_data_ptr(OC_find_item_arg(library_title, title, record_title_compare));
 	if (!item)
 	{
-		message_and_error("No record with that title!\n");
+		message_and_error_noflush("No record with that title!\n");
 	}
 	return item;
 }
