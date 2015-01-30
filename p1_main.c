@@ -323,7 +323,7 @@ int main()
 							}
 							if (OC_apply_if_arg(catalog, collection_contains, record))
 							{
-								message_and_error("Cannot delete a record that is a member of a collection!\n");
+								message_and_error_noflush("Cannot delete a record that is a member of a collection!\n");
 								break;
 							}
 							OC_delete_item(library_title, item);
@@ -383,7 +383,7 @@ int main()
 					{
 						case 'L': /* clear library */
 						{
-							if (OC_apply_if(catalog, Collection_not_empty);)
+							if (OC_apply_if(catalog, Collection_not_empty))
 							{
 								message_and_error("Cannot clear all records unless all collections are empty!\n");
 								break;
