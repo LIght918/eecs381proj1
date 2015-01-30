@@ -55,12 +55,6 @@ void record_destroy(void * addr);
 /* Used to destroy all collections in an Ordered container */
 void collection_destroy(void * addr);
 
-/* Used to deallocate all members of an Ordered container */
-void free_member(void * addr);
-
-/* Deallocates all members and clears the container*/
-void deallocate_and_clear(struct Ordered_container *container);
-
 /* Clear all data */
 void clear_all(struct Ordered_container *catalog, struct Ordered_container *library_title, struct Ordered_container *library_id);
 
@@ -380,8 +374,8 @@ int main()
 								break;
 							}
 							OC_apply(library_title, record_destroy);
-							deallocate_and_clear(library_title);
-							deallocate_and_clear(library_id);
+							OC_clear(library_title);
+							OC_clear(library_id);
 							reset_Record_ID_counter();
 							printf("All records deleted\n");
 							break;
@@ -389,7 +383,7 @@ int main()
 						case 'C': /* clear catalog */
 						{
 							OC_apply(catalog, collection_destroy);
-							deallocate_and_clear(catalog);
+							OC_clear(catalog);
 							printf("All collections deleted\n");
 							break;
 						}
@@ -660,27 +654,14 @@ void collection_destroy(void * addr)
 	destroy_Collection((struct Collection *)addr);
 }
 
-/* Used to deallocate all members of an Ordered container */
-void free_member(void * addr)
-{
-	free(addr);
-}
-
-/* Deallocates all members and clears the container*/
-void deallocate_and_clear(struct Ordered_container *container)
-{
-	OC_apply(container, free_member);
-	OC_clear(container);
-}
-
 /* Clear all data */
 void clear_all(struct Ordered_container *catalog, struct Ordered_container *library_title, struct Ordered_container *library_id)
 {
 	OC_apply(catalog, collection_destroy);
 	OC_apply(library_title, record_destroy);
-	deallocate_and_clear(catalog);
-	deallocate_and_clear(library_title);
-	deallocate_and_clear(library_id);
+	OC_clear(catalog);
+	OC_clear(library_title);
+	OC_clear(library_id);
 	reset_Record_ID_counter();
 }
 
