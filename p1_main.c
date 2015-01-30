@@ -7,8 +7,6 @@
 #include "Ordered_container.h"
 #include "Utility.h"
 
-#define ACTION_OBJECT_READ "%1s%1s"
-
 /* Safely acquires data ptr of an item ptr */
 void *OC_safe_data_ptr(void *item_ptr);
 
@@ -102,9 +100,8 @@ int main()
 	while (1)
 	{
 		printf("\nEnter command: ");
-		if (scanf(ACTION_OBJECT_READ, &action, &object) == 2)
+		if (scanf("%*[ \n\t]%c%*[ \n\t]%c", &action, &object) == 2)
 		{
-			printf("read %s and %s\n", action, object);
 			switch (action)
 			{
 				case 'f': /* find (records only) */
