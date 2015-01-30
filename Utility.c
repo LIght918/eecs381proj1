@@ -43,9 +43,10 @@ int record_id_compare(const void* id, const void* record)
 /* Read in a title from the specified file, returns pointer to the title on success and a NULL on failure */
 char * read_title(char *title, FILE *infile)
 {
-	char *title_start = NULL;
-	char *title_end = NULL;
 	int i;
+	int index = 0;
+	int last_was_whitespace = 1;
+	int last_char_index = -1;
 	/* note: title + SCAN_BUFFER_SIZE is the last character, which must be \0...we want the character before*/
 	if (!fgets(title, BUFFER_SIZE, infile))
 	{
@@ -54,31 +55,25 @@ char * read_title(char *title, FILE *infile)
 	}
 	for (i = 0; i < strlen(title); i++)
 	{
-		if (!isspace(*(title + i)))
+		char current = *(title + i);
+		int is_whitespace = isspace(current);
+		if (!last_was_whitespace && is_whitespace)
 		{
-			title_start = title + i;
-			break;
+			*(title + index++) = ' ';
+			last_was_whitespace = 1;
+		}
+		else if (!is_whitespace)
+		{
+			last_char_index = index;
+			*(title + index++) = current;
+			last_was_whitespace = 0;
 		}
 	}
-	if (title_start == NULL)
+	if (last_char_index == -1)
 	{
 		/* title read error */
 		return NULL;
 	}
-	for (i = strlen(title) - 1; i >= 0; i--)
-	{
-		if (!isspace(*(title + i)))
-		{
-			title_end = title + i + 1;
-			break;
-		}
-	}
-	if (title_end == NULL)
-	{
-		/* title read error */
-		return NULL;
-	}
-	/* set the first character of the terminating whitespace to \0 */
-	*title_end = '\0';
-	return title_start;
+	*(title + last_char_index + 1) = '\0';
+	return title;
 }
