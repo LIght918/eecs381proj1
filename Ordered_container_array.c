@@ -242,8 +242,9 @@ static struct Search_Result OC_binary_search(const struct Ordered_container* c_p
 	while (left <= right)
 	{
 		middle = (left + right) / 2;
+		printf("left = %d\nright = %d\nmiddle = %d\n", left, right, middle);
 		comparison = comp_fun(data_ptr, c_ptr->array[middle]);
-		printf("left = %d\nright = %d\nmiddle = %d\ncomparison = %d\n", left, right, middle, comparison);
+		printf("comparison = %d\n", comparison);
 		if (comparison > 0)
 		{
 			left = middle + 1;
