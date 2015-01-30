@@ -21,7 +21,7 @@ functions, starting with the simplest and most basic. Be sure that you test them
 void print_as_int(int * data_ptr);
 int compare_int(const int * data_ptr1, const int * data_ptr2);
 
-void find_and_remove(struct Ordered_container * container, int * probe);
+int find_and_remove(struct Ordered_container * container, int * probe);
 
 void demo_func(void * data_ptr, void * arg);
 int demo_func2(void * data_ptr, void * arg);
@@ -46,6 +46,7 @@ int main(void)
 	for (i = 0; i < TRIALS; i++)
 	{
 		int random = rand() % 12;
+		int size = 0;
 		switch (random)
 		{
 			case 0:
@@ -63,13 +64,14 @@ int main(void)
 				printf("inserting\n");
 				*new_int = rand() % INT_RANGE;
 				insert(container, new_int);
+				size++;
 				break;
 			}
 			case 4:
 			{
 				int search_int = rand() % INT_RANGE;
 				printf("search and remove\n");
-				find_and_remove(container, &search_int);
+				size -= find_and_remove(container, &search_int);
 				break;
 			}
 			case 5:
@@ -136,6 +138,8 @@ int main(void)
 	
 	OC_destroy_container(container);
 	/* using the pointer "container" is undefined at this point */
+
+	printf("size should be %d\n", size);
 	
 	printf("Done\n");
 	return 0;
@@ -151,7 +155,7 @@ int compare_int(const int * data_ptr1, const int * data_ptr2)
 	return *data_ptr1 - *data_ptr2;
 }
 
-void find_and_remove(struct Ordered_container * container, int * probe)
+int find_and_remove(struct Ordered_container * container, int * probe)
 {
 	void * found_item;
 	printf("search for %d:\n", *probe);
@@ -160,10 +164,12 @@ void find_and_remove(struct Ordered_container * container, int * probe)
 		printf("found %d\n", *((int *)OC_get_data_ptr(found_item)));
 		OC_delete_item(container, found_item);
 		printf("item removed\n");
+		return 1;
 	}
 	else
 	{
 		printf("probed item not found\n");
+		return 0;
 	}
 }
 
