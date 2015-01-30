@@ -302,12 +302,10 @@ Performed on range [start, end), in order depending on reverse */
 static int OC_apply_helper(const struct Ordered_container* c_ptr, OC_apply_template_fp_t afp, void* arg_ptr, apply_enum apply_func, int start, int end, int reverse)
 {
 	int i;
-	printf("starting apply helper\n");
 	for (i = (reverse ? end - 1 : start); (reverse ? i >= start : i < end); (reverse ? i-- : i++))
 	{
 		int function_return;
 		void **item_ptr = c_ptr->array + i;
-		printf("%p = %d\n", (void*)c_ptr, i);
 		switch (apply_func)
 		{
 		case APPLY:
