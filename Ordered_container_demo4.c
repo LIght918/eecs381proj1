@@ -14,7 +14,7 @@ functions, starting with the simplest and most basic. Be sure that you test them
 #include "Ordered_container.h"
 #include <stdlib.h>
 
-#define TRIALS 1000
+#define TRIALS 50000
 #define INT_RANGE 350
 
 /* function prototypes */
