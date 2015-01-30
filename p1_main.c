@@ -313,19 +313,16 @@ int main()
 						case 'r': /* delete record */
 						{
 							void *item = read_title_get_item_ptr(library_title);
-							struct Record *record;
-							int is_member;
+							struct Record *record = OC_safe_data_ptr(item);
 							if (!item)
 							{
 								break;
 							}
-							is_member = OC_apply_if_arg(catalog, collection_contains, item);
-							if (is_member)
+							if (OC_apply_if_arg(catalog, collection_contains, record))
 							{
 								message_and_error("Cannot delete a record that is a member of a collection!\n");
 								break;
 							}
-							record = OC_get_data_ptr(item);
 							OC_delete_item(library_title, item);
 							OC_delete_item(library_id, OC_find_item(library_id, record));
 							printf("Record %d %s deleted\n", get_Record_ID(record), get_Record_title(record));
