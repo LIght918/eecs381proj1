@@ -671,10 +671,7 @@ void flush_stream(void)
 void message_and_error(char * message)
 {
 	printf(message);
-	if (flush)
-	{
-		flush_stream();
-	}
+	flush_stream();
 }
 
 /* Prints message and flushes */
