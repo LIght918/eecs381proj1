@@ -108,7 +108,7 @@ struct Record* load_Record(FILE* infile)
 		/* medium error */
 		return NULL;
 	}
-	if (fscanf(infile, "%d", &rating) != 1 || rating < 0 || rating > 10)
+	if (fscanf(infile, "%d ", &rating) != 1 || rating < 0 || rating > 10)
 	{
 		/* rating error */
 		return NULL;
