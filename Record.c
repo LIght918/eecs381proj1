@@ -120,6 +120,7 @@ struct Record* load_Record(FILE* infile)
 		return NULL;
 	}
 	record = create_Record(medium, title_start);
+	next_record_id--; /* counteract the increment of create_Record */
 	record->ID = id;
 	if (id > next_record_id)
 	{

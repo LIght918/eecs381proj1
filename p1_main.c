@@ -403,6 +403,7 @@ int main()
 						{
 							clear_all(catalog, library_title, library_id);
 							printf("All data deleted\n");
+							break;
 						}
 						default:
 						{
