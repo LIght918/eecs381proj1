@@ -47,7 +47,6 @@ char * read_title(char *title, FILE *infile)
 	int index = 0;
 	int last_was_whitespace = 1;
 	int last_char_index = -1;
-	/* note: title + SCAN_BUFFER_SIZE is the last character, which must be \0...we want the character before*/
 	if (!fgets(title, BUFFER_SIZE, infile))
 	{
 		/* title read error */

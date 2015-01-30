@@ -31,11 +31,17 @@ void collection_save(void* collection, void* current_file);
 /* Save a record */
 void record_save(void* record, void* current_file);
 
+/* Read in title and get item ptr to record from library */
+void *read_title_get_item_ptr(struct Ordered_container *library_title);
+
 /* Read in title and get record from library */
 struct Record * read_title_get_record(struct Ordered_container *library_title);
 
 /* Read record id and get record from library */
 struct Record * read_id_get_record(struct Ordered_container *library_id);
+
+/* Read in name and get item ptr to collection from library */
+void *read_name_get_item_ptr(struct Ordered_container *catalog);
 
 /* Read in name and get collection from library */
 struct Collection * read_name_get_collection(struct Ordered_container *catalog);
@@ -301,7 +307,8 @@ int main()
 					{
 						case 'r': /* delete record */
 						{
-							struct Record *item = read_title_get_record(library_title);
+							void *item = read_title_get_item_ptr(library_title);
+							struct Record *record;
 							int is_member;
 							if (!item)
 							{
@@ -315,18 +322,23 @@ int main()
 							}
 							OC_delete_item(library_title, item);
 							OC_delete_item(library_id, item);
-							printf("Record %d %s deleted\n", get_Record_ID(item), get_Record_title(item));
+							record = OC_get_data_ptr(item);
+							printf("Record %d %s deleted\n", get_Record_ID(record), get_Record_title(record));
+							destroy_Record(record);
 							break;
 						}
 						case 'c': /* delete collection */
 						{
-							struct Collection *collection = read_name_get_collection(catalog);
-							if (!collection)
+							void *item = read_name_get_item_ptr(catalog);
+							struct Collection *collection;
+							if (!item)
 							{
 								break;
 							}
-							OC_delete_item(catalog, collection);
+							OC_delete_item(catalog, item);
+							collection = OC_get_data_ptr(item);
 							printf("Collection %s deleted\n", get_Collection_name(collection));
+							destroy_Collection(collection);
 							break;
 						}
 						case 'm': /* delete record from collection */
@@ -559,18 +571,18 @@ void record_save(void* record, void* current_file)
 	save_Record((struct Record *)record, (FILE *)current_file);
 }
 
-/* Read in title and get record from library */
-struct Record * read_title_get_record(struct Ordered_container *library_title)
+/* Read in title and get item ptr to record from library */
+void *read_title_get_item_ptr(struct Ordered_container *library_title)
 {
 	char title_buffer[BUFFER_SIZE];
 	char *title = read_title(title_buffer, stdin);
-	struct Record *item;
+	void *item;
 	if (!title)
 	{
 		title_read_error();
 		return NULL;
 	}
-	item = OC_safe_data_ptr(OC_find_item_arg(library_title, title, record_title_compare));
+	item = OC_find_item_arg(library_title, title, record_title_compare);
 	if (!item)
 	{
 		message_and_error_noflush("No record with that title!\n");
@@ -578,20 +590,44 @@ struct Record * read_title_get_record(struct Ordered_container *library_title)
 	return item;
 }
 
+/* Read in title and get record from library */
+struct Record * read_title_get_record(struct Ordered_container *library_title)
+{
+	return OC_safe_data_ptr(read_title_get_item_ptr(library_title));
+}
+
 /* Read record id and get record from library */
 struct Record * read_id_get_record(struct Ordered_container *library_id)
 {
 	int id;
-	struct Record *item;
+	struct Record *record;
 	if (scanf("%d", &id) != 1)
 	{
 		integer_read_error();
 		return NULL;
 	}
-	item = OC_safe_data_ptr(OC_find_item_arg(library_id, &id, record_id_compare));
-	if (!item)
+	record = OC_safe_data_ptr(OC_find_item_arg(library_id, &id, record_id_compare));
+	if (!record)
 	{
 		message_and_error("No record with that ID!\n");
+	}
+	return record;
+}
+
+/* Read in name and get item ptr to collection from library */
+void *read_name_get_item_ptr(struct Ordered_container *catalog)
+{
+	char name[BUFFER_SIZE];
+	void *item;
+	if (scanf(SCAN_BUFFER, name) != 1)
+	{
+		/* this should never happen because scanf will ignore all whitespace until the next character */
+		return NULL;
+	}
+	item = OC_find_item_arg(catalog, name, collection_name_compare);
+	if (!item)
+	{
+		message_and_error("No collection with that name!\n");
 	}
 	return item;
 }
@@ -599,19 +635,7 @@ struct Record * read_id_get_record(struct Ordered_container *library_id)
 /* Read in name and get collection from library */
 struct Collection * read_name_get_collection(struct Ordered_container *catalog)
 {
-	char name[BUFFER_SIZE];
-	struct Collection *collection;
-	if (scanf(SCAN_BUFFER, name) != 1)
-	{
-		/* this should never happen because scanf will ignore all whitespace until the next character */
-		return NULL;
-	}
-	collection = OC_safe_data_ptr(OC_find_item_arg(catalog, name, collection_name_compare));
-	if (!collection)
-	{
-		message_and_error("No collection with that name!\n");
-	}
-	return collection;
+	return OC_safe_data_ptr(read_name_get_item_ptr(catalog));
 }
 
 /* Return non-zero if there are no members, 0 if there are members */
