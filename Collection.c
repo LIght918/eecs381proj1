@@ -76,7 +76,7 @@ int remove_Collection_member(struct Collection* collection_ptr, const struct Rec
 {
 	if (is_Collection_member_present(collection_ptr, record_ptr))
 	{
-		OC_delete_item(collection_ptr->members, (void*)record_ptr);
+		OC_delete_item(collection_ptr->members, OC_find_item(collection_ptr->members, record_ptr));
 		return 0;
 	}
 	return 1;
