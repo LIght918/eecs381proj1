@@ -5,9 +5,17 @@
 #include "p1_globals.h"
 #include <stdio.h>
 
-#define BUFFER_SIZE 64
-#define SCAN_BUFFER "%63s"
+#define TITLE_BUFFER_SIZE 64
+#define TITLE_SCAN_BUFFER "%63s"
 #define TITLE_BUFFER_END 62
+#define NAME_BUFFER_SIZE 16
+#define NAME_SCAN_BUFFER "%15s"
+#define MEDIUM_BUFFER_SIZE 8
+#define MEDIUM_SCAN_BUFFER "%7s"
+#define FILE_BUFFER_SIZE 32
+#define FILE_SCAN_BUFFER "%31s"
+#define RATING_MAX 5
+#define RATING_MIN 1
 
 /* Print a record */
 void record_print(void* record);

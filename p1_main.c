@@ -210,7 +210,7 @@ int main()
 								integer_read_error();
 								break;
 							}
-							if (rating < 0 || rating > 10)
+							if (rating < RATING_MIN || rating > RATING_MAX)
 							{
 								message_and_error("Rating is out of range!\n");
 								break;
@@ -233,11 +233,11 @@ int main()
 					{
 						case 'r': /* add record */
 						{
-							char medium[BUFFER_SIZE];
-							char title_buffer[BUFFER_SIZE];
+							char medium[MEDIUM_BUFFER_SIZE];
+							char title_buffer[TITLE_BUFFER_SIZE];
 							char *title;
 							struct Record *record;
-							if (scanf(SCAN_BUFFER, medium) != 1)
+							if (scanf(MEDIUM_SCAN_BUFFER, medium) != 1)
 							{
 								title_read_error();
 								break;
@@ -261,9 +261,9 @@ int main()
 						}
 						case 'c': /* add collection */
 						{
-							char name[BUFFER_SIZE];
+							char name[NAME_BUFFER_SIZE];
 							struct Collection *collection;
-							if (scanf(SCAN_BUFFER, name) != 1)
+							if (scanf(NAME_SCAN_BUFFER, name) != 1)
 							{
 								title_read_error();
 								break;
@@ -587,7 +587,7 @@ void record_save(void* record, void* current_file)
 /* Read in title and get item ptr to record from library */
 void *read_title_get_item_ptr(struct Ordered_container *library_title)
 {
-	char title_buffer[BUFFER_SIZE];
+	char title_buffer[TITLE_BUFFER_SIZE];
 	char *title = read_title(title_buffer, stdin);
 	void *item;
 	if (!title)
@@ -630,9 +630,9 @@ struct Record * read_id_get_record(struct Ordered_container *library_id)
 /* Read in name and get item ptr to collection from library */
 void *read_name_get_item_ptr(struct Ordered_container *catalog)
 {
-	char name[BUFFER_SIZE];
+	char name[NAME_BUFFER_SIZE];
 	void *item;
-	if (scanf(SCAN_BUFFER, name) != 1)
+	if (scanf(NAME_SCAN_BUFFER, name) != 1)
 	{
 		/* this should never happen because scanf will ignore all whitespace until the next character */
 		return NULL;
@@ -702,9 +702,9 @@ void clear_all_message(struct Ordered_container *catalog, struct Ordered_contain
 /* Reads in filename and open file with given mode */
 FILE * read_filename_open_file(char * mode)
 {
-	char filename[BUFFER_SIZE];
+	char filename[FILE_BUFFER_SIZE];
 	FILE *file;
-	if (scanf(SCAN_BUFFER, filename) != 1)
+	if (scanf(FILE_SCAN_BUFFER, filename) != 1)
 	{
 		file_open_error();
 		return NULL;

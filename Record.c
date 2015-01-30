@@ -95,15 +95,15 @@ struct Record* load_Record(FILE* infile)
 {
 	struct Record *record;
 	int id, rating;
-	char medium[BUFFER_SIZE];
-	char title[BUFFER_SIZE];
+	char medium[MEDIUM_BUFFER_SIZE];
+	char title[TITLE_BUFFER_SIZE];
 	char *title_start;
 	if (fscanf(infile, "%d", &id) != 1)
 	{
 		/* ID error */
 		return NULL;
 	}
-	if (fscanf(infile, SCAN_BUFFER, medium) != 1)
+	if (fscanf(infile, MEDIUM_SCAN_BUFFER, medium) != 1)
 	{
 		/* medium error */
 		return NULL;

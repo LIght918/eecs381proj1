@@ -41,7 +41,7 @@ char * read_title(char *title, FILE *infile)
 	int index = 0;
 	int last_was_whitespace = 1;
 	int last_char_index = -1;
-	if (!fgets(title, BUFFER_SIZE, infile))
+	if (!fgets(title, TITLE_BUFFER_SIZE, infile))
 	{
 		/* title read error */
 		return NULL;
