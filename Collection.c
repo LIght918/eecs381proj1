@@ -84,9 +84,10 @@ int remove_Collection_member(struct Collection* collection_ptr, const struct Rec
 /* Print the data in a Collection. */
 void print_Collection(const struct Collection* collection_ptr)
 {
-	printf("Collection %s contains:\n", collection_ptr->name);
+	printf("Collection %s contains:", collection_ptr->name);
 	if (!Collection_empty(collection_ptr))
 	{
+		printf("\n");
 		OC_apply(collection_ptr->members, record_print);
 	}
 	else
