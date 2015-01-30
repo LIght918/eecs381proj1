@@ -14,7 +14,7 @@ functions, starting with the simplest and most basic. Be sure that you test them
 #include "Ordered_container.h"
 #include <stdlib.h>
 
-#define TRIALS 10000
+#define TRIALS 100
 #define INT_RANGE 350
 
 /* function prototypes */
@@ -60,6 +60,7 @@ int main(void)
 			case 3:
 			{
 				int *new_int = malloc(sizeof(int));
+				printf("inserting\n");
 				*new_int = rand() % INT_RANGE;
 				insert(container, new_int);
 				break;
@@ -67,49 +68,58 @@ int main(void)
 			case 4:
 			{
 				int search_int = rand() % INT_RANGE;
+				printf("search and remove\n");
 				find_and_remove(container, &search_int);
 				break;
 			}
 			case 5:
 			{
 				int value = rand() % INT_RANGE;
+				printf("demo_func\n");
 				OC_apply_arg(container, demo_func, (void *)&value);
 				break;
 			}
 			case 6:
 			{
 				int value = rand() % INT_RANGE;
+				printf("demo_func2\n");
 				OC_apply_if_arg(container, demo_func2, (void *)&value);
 				break;
 			}
 			case 7:
 			{
+				printf("demo_func3\n");
 				OC_apply_if(container, demo_func3);
 				break;
 			}
 			case 8:
 			{
+				printf("print\n");
 				print_all(container);
 				break;
 			}
 			case 9:
 			{
+				printf("add_one\n");
 				OC_apply(container, add_one);
 				break;
 			}
 			case 10:
 			{
+				printf("sub_one\n");
 				OC_apply(container, sub_one);
 				break;
 			}
 			case 11:
 			{
 				int value = rand() % INT_RANGE;
+				printf("demo_func2_add\n");
 				OC_apply_if_arg(container, demo_func2_add, (void *)&value);
 				break;
 			}
 			case 12:
 			{
+				printf("demo_func3_sub\n");
 				OC_apply_if(container, demo_func3_sub);
 				break;
 			}
