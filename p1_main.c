@@ -383,8 +383,7 @@ int main()
 					{
 						case 'L': /* clear library */
 						{
-							int has_members = OC_apply_if(catalog, Collection_not_empty);
-							if (has_members)
+							if (OC_apply_if(catalog, Collection_not_empty);)
 							{
 								message_and_error("Cannot clear all records unless all collections are empty!\n");
 								break;
