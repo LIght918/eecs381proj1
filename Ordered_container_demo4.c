@@ -14,7 +14,7 @@ functions, starting with the simplest and most basic. Be sure that you test them
 #include "Ordered_container.h"
 #include <stdlib.h>
 
-#define TRIALS 1000
+#define TRIALS 10000
 #define INT_RANGE 350
 
 /* function prototypes */
@@ -93,6 +93,7 @@ int main(void)
 				break;
 			}
 		}
+		printf("\n");
 	}
 
 	print_all(container);
@@ -121,7 +122,7 @@ int compare_int(const int * data_ptr1, const int * data_ptr2)
 void find_and_remove(struct Ordered_container * container, int * probe)
 {
 	void * found_item;
-	printf("\nsearch for %d:\n", *probe);
+	printf("search for %d:\n", *probe);
 	found_item = OC_find_item(container, probe);
 	if(found_item) {
 		printf("found %d\n", *((int *)OC_get_data_ptr(found_item)));
@@ -136,7 +137,7 @@ void find_and_remove(struct Ordered_container * container, int * probe)
 
 void insert(struct Ordered_container * container, int * insert)
 {
-	printf("\ninserting %d\n", *insert);
+	printf("inserting %d\n", *insert);
 	OC_insert(container, insert);
 }
 
