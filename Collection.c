@@ -116,7 +116,7 @@ struct Collection* load_Collection(FILE* input_file, const struct Ordered_contai
 		/* error reading name */
 		return NULL;
 	}
-	if (fscanf(input_file, "%d\n", &elements) != 2)
+	if (fscanf(input_file, "%d\n", &elements) != 1)
 	{
 		/* error reading size */
 		return NULL;
@@ -124,13 +124,23 @@ struct Collection* load_Collection(FILE* input_file, const struct Ordered_contai
 	collection = create_Collection(collection_name);
 	for (; elements > 0; elements--)
 	{
-		char title[BUFFER_SIZE];
-		if (!fgets(title, BUFFER_SIZE, input_file))
+		char title_buffer[BUFFER_SIZE];
+		char *title = read_title(title_buffer, input_file);
+		void *item;
+		if (title == NULL)
 		{
+			/* error reading record title */
 			destroy_Collection(collection);
 			return NULL;
 		}
-		OC_insert(collection->members, OC_find_item_arg(collection->members, title, record_title_compare));
+		item = OC_find_item_arg(collection->members, title, record_title_compare);
+		if (item == NULL)
+		{
+			/* title not found in library */
+			destroy_Collection(collection);
+			return NULL;
+		}
+		OC_insert(collection->members, OC_get_data_ptr(item));
 	}
 	return collection;
 }

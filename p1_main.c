@@ -49,6 +49,12 @@ struct Collection * read_name_get_collection(struct Ordered_container *catalog);
 /* Return non-zero if there are no members, 0 if there are members */
 int Collection_not_empty(void* collection_ptr);
 
+/* Used to destroy all records in an Ordered container */
+void record_destroy(void * addr);
+
+/* Used to destroy all collections in an Ordered container */
+void collection_destroy(void * addr);
+
 /* Used to deallocate all members of an Ordered container */
 void free_member(void * addr);
 
@@ -94,7 +100,7 @@ int main()
 	while (1)
 	{
 		printf("\nEnter command: ");
-		if (scanf("\n%c%c", &action, &object) == 2)
+		if (scanf(" %c%c", &action, &object) == 2)
 		{
 			switch (action)
 			{
@@ -645,6 +651,18 @@ int Collection_not_empty(void* collection_ptr)
 	return !Collection_empty((const struct Collection *)collection_ptr);
 }
 
+/* Used to destroy all records in an Ordered container */
+void record_destroy(void * addr)
+{
+	destroy_Record((struct Record *)addr);
+}
+
+/* Used to destroy all collections in an Ordered container */
+void collection_destroy(void * addr)
+{
+	destroy_Collection((struct Collection *)collection);
+}
+
 /* Used to deallocate all members of an Ordered container */
 void free_member(void * addr)
 {
@@ -661,6 +679,8 @@ void deallocate_and_clear(struct Ordered_container *container)
 /* Clear all data */
 void clear_all(struct Ordered_container *catalog, struct Ordered_container *library_title, struct Ordered_container *library_id)
 {
+	OC_apply(catalog, collection_destroy);
+	OC_apply(library_title, record_destroy);
 	deallocate_and_clear(catalog);
 	deallocate_and_clear(library_title);
 	deallocate_and_clear(library_id);
