@@ -278,7 +278,7 @@ int main()
 						case 'm': /* add record to collection */
 						{
 							struct Collection *collection = read_name_get_collection(catalog);
-							struct Record *item = read_title_get_record(library_title);
+							struct Record *item = read_id_get_record(library_title);
 							if (!item || !collection)
 							{
 								break;
@@ -344,7 +344,7 @@ int main()
 						case 'm': /* delete record from collection */
 						{
 							struct Collection *collection = read_name_get_collection(catalog);
-							struct Record *item = read_title_get_record(library_title);
+							struct Record *item = read_id_get_record(library_title);
 							if (!item || !collection)
 							{
 								break;
