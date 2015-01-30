@@ -45,7 +45,7 @@ int main(void)
 	
 	for (i = 0; i < TRIALS; i++)
 	{
-		int random = rand() % 13;
+		int random = rand() % 12;
 		switch (random)
 		{
 			case 0:
@@ -94,30 +94,24 @@ int main(void)
 			}
 			case 8:
 			{
-				printf("print\n");
-				print_all(container);
-				break;
-			}
-			case 9:
-			{
 				printf("add_one\n");
 				OC_apply(container, add_one);
 				break;
 			}
-			case 10:
+			case 9:
 			{
 				printf("sub_one\n");
 				OC_apply(container, sub_one);
 				break;
 			}
-			case 11:
+			case 10:
 			{
 				int value = rand() % INT_RANGE;
 				printf("demo_func2_add\n");
 				OC_apply_if_arg(container, demo_func2_add, (void *)&value);
 				break;
 			}
-			case 12:
+			case 11:
 			{
 				printf("demo_func3_sub\n");
 				OC_apply_if(container, demo_func3_sub);
@@ -128,6 +122,9 @@ int main(void)
 				break;
 			}
 		}
+		printf("\n");
+		printf("print\n");
+		print_all(container);
 		printf("\n");
 	}
 
