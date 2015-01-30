@@ -26,6 +26,10 @@ void find_and_remove(struct Ordered_container * container, int * probe);
 void demo_func(void * data_ptr, void * arg);
 int demo_func2(void * data_ptr, void * arg);
 int demo_func3(void * data_ptr);
+int demo_func2_add(void * data_ptr, void * arg);
+int demo_func3_sub(void * data_ptr);
+void add_one(void * data_ptr);
+void sub_one(void * data_ptr);
 
 void insert(struct Ordered_container * container, int * insert);
 void print_all(struct Ordered_container * container);
@@ -37,11 +41,11 @@ int main(void)
 	
 	container = OC_create_container((int (*)(const void *, const void *))compare_int);
 
-	srand(0);
+	srand(1);
 	
 	for (i = 0; i < TRIALS; i++)
 	{
-		int random = rand() % 9;
+		int random = rand() % 13;
 		switch (random)
 		{
 			case 0:
@@ -86,6 +90,26 @@ int main(void)
 			case 8:
 			{
 				print_all(container);
+				break;
+			}
+			case 9:
+			{
+				OC_apply(container, add_one);
+				break;
+			}
+			case 10:
+			{
+				OC_apply(container, sub_one);
+				break;
+			}
+			case 11:
+			{
+				OC_apply_if_arg(container, demo_func2_add, (void *)&value);
+				break;
+			}
+			case 12:
+			{
+				OC_apply_if(container, demo_func3_sub);
 				break;
 			}
 			default:
@@ -183,6 +207,28 @@ int demo_func3(void * data_ptr)
 		printf("%d = even\n", *((int *)data_ptr));
 		return 0;
 	}
+}
+
+int demo_func2_add(void * data_ptr, void * arg)
+{
+	add_one(data_ptr);
+	return demo_func2(data_ptr, arg);
+}
+
+int demo_func3_sub(void * data_ptr)
+{
+	sub_one(data_ptr);
+	return demo_func3(data_ptr);
+}
+
+void add_one(void * data_ptr)
+{
+	*((int*)data_ptr) = (*((int*)data_ptr) + 1) % INT_RANGE;
+}
+
+void sub_one(void * data_ptr)
+{
+	*((int*)data_ptr) = (*((int*)data_ptr) - 1) % INT_RANGE;
 }
 
 
