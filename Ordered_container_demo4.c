@@ -115,7 +115,7 @@ void print_as_int(int * data_ptr)
 
 int compare_int(const int * data_ptr1, const int * data_ptr2)
 {
-	return *data_ptr2 - *data_ptr1;
+	return *data_ptr1 - *data_ptr2;
 }
 
 void find_and_remove(struct Ordered_container * container, int * probe)
