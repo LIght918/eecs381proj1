@@ -64,6 +64,9 @@ void clear_library(struct Ordered_container *library_title, struct Ordered_conta
 /* Clear all data */
 void clear_all(struct Ordered_container *catalog, struct Ordered_container *library_title, struct Ordered_container *library_id);
 
+/* Clear all and print a message */
+void clear_all_message(struct Ordered_container *catalog, struct Ordered_container *library_title, struct Ordered_container *library_id);
+
 /* Reads in filename and open file with given mode */
 FILE * read_filename_open_file(char * mode);
 
@@ -398,8 +401,7 @@ int main()
 						}
 						case 'A': /* clear all */
 						{
-							clear_all(catalog, library_title, library_id);
-							printf("All data deleted\n");
+							clear_all_message(catalog, library_title, library_id);
 							break;
 						}
 						default:
@@ -505,6 +507,7 @@ int main()
 					{
 						case 'q': /* quit */
 						{
+							clear_all_message(catalog, library_title, library_id);
 							printf("Done\n");
 							return 0;
 						}
@@ -687,6 +690,13 @@ void clear_all(struct Ordered_container *catalog, struct Ordered_container *libr
 {
 	clear_catalog(catalog);
 	clear_library(library_title, library_id);
+}
+
+/* Clear all and print a message */
+void clear_all_message(struct Ordered_container *catalog, struct Ordered_container *library_title, struct Ordered_container *library_id)
+{
+	clear_all(catalog, library_title, library_id);
+	printf("All data deleted\n");
 }
 
 /* Reads in filename and open file with given mode */
