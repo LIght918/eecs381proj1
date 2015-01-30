@@ -41,7 +41,7 @@ int main(void)
 	
 	for (i = 0; i < TRIALS; i++)
 	{
-		int random = rand() % 8;
+		int random = rand() % 9;
 		switch (random)
 		{
 			case 0:
@@ -83,14 +83,19 @@ int main(void)
 				OC_apply_if(container, demo_func3);
 				break;
 			}
+			case 8:
+			{
+				print_all(container);
+				break;
+			}
 			default:
 			{
 				break;
 			}
 		}
-
-		print_all(container);
 	}
+
+	print_all(container);
 
 	OC_clear(container);
 
