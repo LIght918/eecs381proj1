@@ -278,19 +278,19 @@ int main()
 						case 'm': /* add record to collection */
 						{
 							struct Collection *collection = read_name_get_collection(catalog);
-							struct Record *item;
+							struct Record *record;
 							if (!collection)
 							{
 								break;
 							}
-							item = read_id_get_record(library_title);
-							if (!item)
+							record = read_id_get_record(library_id);
+							if (!record)
 							{
 								break;
 							}
-							if (!add_Collection_member(collection, item))
+							if (!add_Collection_member(collection, record))
 							{
-								printf("Member %d %s added\n", get_Record_ID(item), get_Record_title(item));
+								printf("Member %d %s added\n", get_Record_ID(record), get_Record_title(record));
 							}
 							else
 							{
@@ -349,19 +349,19 @@ int main()
 						case 'm': /* delete record from collection */
 						{
 							struct Collection *collection = read_name_get_collection(catalog);
-							struct Record *item;
+							struct Record *record;
 							if (!collection)
 							{
 								break;
 							}
-							item = read_id_get_record(library_title);
-							if (!item)
+							record = read_id_get_record(library_id);
+							if (!record)
 							{
 								break;
 							}
-							if (!remove_Collection_member(collection, item))
+							if (!remove_Collection_member(collection, record))
 							{
-								printf("Member %d %s deleted\n", get_Record_ID(item), get_Record_title(item));
+								printf("Member %d %s deleted\n", get_Record_ID(record), get_Record_title(record));
 							}
 							else
 							{
