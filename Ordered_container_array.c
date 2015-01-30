@@ -155,6 +155,7 @@ void OC_insert(struct Ordered_container* c_ptr, const void* data_ptr)
 	g_Container_items_in_use++;
 
 	{
+		int i;
 		printf("adding %p\n", data_ptr);
 		for (i = 0; i < c_ptr->size; i++)
 		{
