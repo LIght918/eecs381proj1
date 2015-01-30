@@ -26,7 +26,7 @@ void find_and_remove(struct Ordered_container * container, int * probe);
 void demo_func(void * data_ptr, void * arg);
 int demo_func2(void * data_ptr, void * arg);
 int demo_func3(void * data_ptr);
-int demo_func2_add(void * data_ptr, void * arg);
+int demo_func2_sub(void * data_ptr, void * arg);
 int demo_func3_sub(void * data_ptr);
 void add_one(void * data_ptr);
 void sub_one(void * data_ptr);
@@ -107,8 +107,8 @@ int main(void)
 			case 10:
 			{
 				int value = rand() % INT_RANGE;
-				printf("demo_func2_add\n");
-				OC_apply_if_arg(container, demo_func2_add, (void *)&value);
+				printf("demo_func2_sub\n");
+				OC_apply_if_arg(container, demo_func2_sub, (void *)&value);
 				break;
 			}
 			case 11:
@@ -217,9 +217,9 @@ int demo_func3(void * data_ptr)
 	}
 }
 
-int demo_func2_add(void * data_ptr, void * arg)
+int demo_func2_sub(void * data_ptr, void * arg)
 {
-	add_one(data_ptr);
+	sub_one(data_ptr);
 	return demo_func2(data_ptr, arg);
 }
 
