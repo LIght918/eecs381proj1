@@ -7,6 +7,9 @@
 #include "Ordered_container.h"
 #include "Utility.h"
 
+/* Safely acquires data ptr of an item ptr */
+void *OC_safe_data_ptr(void *item_ptr);
+
 /* Compare collections by their name */
 int collection_compare(const void* first_collection, const void* second_collection);
 
@@ -501,6 +504,16 @@ int main()
 	}
 }
 
+/* Safely acquires data ptr of an item ptr */
+void *OC_safe_data_ptr(void *item_ptr)
+{
+	if (item_ptr = NULL)
+	{
+		return NULL;
+	}
+	return OC_get_data_ptr(item_ptr);
+}
+
 /* Compare collections by their name */
 int collection_compare(const void* first_collection, const void* second_collection)
 {
@@ -554,7 +567,7 @@ struct Record * read_title_get_record(struct Ordered_container *library_title)
 		title_read_error();
 		return NULL;
 	}
-	item = OC_get_data_ptr(OC_find_item_arg(library_title, title, record_title_compare));
+	item = OC_safe_data_ptr(OC_find_item_arg(library_title, title, record_title_compare));
 	if (!item)
 	{
 		message_and_error("No record with that title!\n");
@@ -572,7 +585,7 @@ struct Record * read_id_get_record(struct Ordered_container *library_id)
 		integer_read_error();
 		return NULL;
 	}
-	item = OC_get_data_ptr(OC_find_item_arg(library_id, &id, record_id_compare));
+	item = OC_safe_data_ptr(OC_find_item_arg(library_id, &id, record_id_compare));
 	if (!item)
 	{
 		message_and_error("No record with that ID!\n");
@@ -590,7 +603,7 @@ struct Collection * read_name_get_collection(struct Ordered_container *catalog)
 		/* couldn't read name */
 		return NULL;
 	}
-	collection = OC_get_data_ptr(OC_find_item_arg(catalog, name, collection_name_compare));
+	collection = OC_safe_data_ptr(OC_find_item_arg(catalog, name, collection_name_compare));
 	if (!collection)
 	{
 		/* collection not found error */
