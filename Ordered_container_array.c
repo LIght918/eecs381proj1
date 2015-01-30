@@ -208,7 +208,7 @@ the function takes a second argument, which is the supplied void pointer.
 The contents of the container cannot be modified. */
 void OC_apply_arg(const struct Ordered_container* c_ptr, OC_apply_arg_fp_t afp, void* arg_ptr)
 {
-	OC_apply_helper_simple(c_ptr, (OC_apply_template_fp_t)afp, arg_ptr, APPLY);
+	OC_apply_helper_simple(c_ptr, (OC_apply_template_fp_t)afp, arg_ptr, APPLY_ARG);
 }
 
 /* Apply the supplied function to the data pointer in each item in the container;
@@ -217,7 +217,7 @@ If the function returns non-zero, the iteration is terminated, and that value
 returned. Otherwise, zero is returned. The contents of the container cannot be modified */
 int OC_apply_if_arg(const struct Ordered_container* c_ptr, OC_apply_if_arg_fp_t afp, void* arg_ptr)
 {
-	return OC_apply_helper_simple(c_ptr, (OC_apply_template_fp_t)afp, arg_ptr, APPLY);
+	return OC_apply_helper_simple(c_ptr, (OC_apply_template_fp_t)afp, arg_ptr, APPLY_ARG_IF);
 }
 
 /*
@@ -307,7 +307,7 @@ static int OC_apply_helper(const struct Ordered_container* c_ptr, OC_apply_templ
 	{
 		int function_return;
 		void **item_ptr = c_ptr->array + i;
-		printf("i = %d\n", i);
+		printf("%p = %d\n", c_ptr, i);
 		switch (apply_func)
 		{
 		case APPLY:
