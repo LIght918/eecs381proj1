@@ -55,6 +55,12 @@ void record_destroy(void * addr);
 /* Used to destroy all collections in an Ordered container */
 void collection_destroy(void * addr);
 
+/* Clear catalog */
+void clear_catalog(struct Ordered_container *catalog);
+
+/* Clear library */
+void clear_library(struct Ordered_container *library_title, struct Ordered_container *library_id);
+
 /* Clear all data */
 void clear_all(struct Ordered_container *catalog, struct Ordered_container *library_title, struct Ordered_container *library_id);
 
@@ -373,17 +379,13 @@ int main()
 								message_and_error("Cannot clear all records unless all collections are empty!\n");
 								break;
 							}
-							OC_apply(library_title, record_destroy);
-							OC_clear(library_title);
-							OC_clear(library_id);
-							reset_Record_ID_counter();
+							clear_library(library_title, library_id);
 							printf("All records deleted\n");
 							break;
 						}
 						case 'C': /* clear catalog */
 						{
-							OC_apply(catalog, collection_destroy);
-							OC_clear(catalog);
+							clear_catalog(catalog);
 							printf("All collections deleted\n");
 							break;
 						}
@@ -515,9 +517,9 @@ int main()
 			}
 		}
 	}
-	free(catalog);
-	free(library_title);
-	free(library_id);
+	OC_destroy_container(catalog);
+	OC_destroy_container(library_title);
+	OC_destroy_container(library_id);
 }
 
 /* Safely acquires data ptr of an item ptr */
@@ -657,15 +659,27 @@ void collection_destroy(void * addr)
 	destroy_Collection((struct Collection *)addr);
 }
 
-/* Clear all data */
-void clear_all(struct Ordered_container *catalog, struct Ordered_container *library_title, struct Ordered_container *library_id)
+/* Clear catalog */
+void clear_catalog(struct Ordered_container *catalog)
 {
 	OC_apply(catalog, collection_destroy);
-	OC_apply(library_title, record_destroy);
 	OC_clear(catalog);
+}
+
+/* Clear library */
+void clear_library(struct Ordered_container *library_title, struct Ordered_container *library_id)
+{
+	OC_apply(library_title, record_destroy);
 	OC_clear(library_title);
 	OC_clear(library_id);
 	reset_Record_ID_counter();
+}
+
+/* Clear all data */
+void clear_all(struct Ordered_container *catalog, struct Ordered_container *library_title, struct Ordered_container *library_id)
+{
+	clear_catalog(catalog);
+	clear_library(library_title, library_id);
 }
 
 /* Reads in filename and open file with given mode */
