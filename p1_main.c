@@ -660,7 +660,7 @@ void record_destroy(void * addr)
 /* Used to destroy all collections in an Ordered container */
 void collection_destroy(void * addr)
 {
-	destroy_Collection((struct Collection *)collection);
+	destroy_Collection((struct Collection *)addr);
 }
 
 /* Used to deallocate all members of an Ordered container */
