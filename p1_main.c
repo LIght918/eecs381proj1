@@ -417,6 +417,7 @@ int main()
 							}
 							fprintf(outfile, "%d\n", OC_get_size(library_title));
 							OC_apply_arg(library_title, record_save, outfile);
+							fprintf(outfile, "%d\n", OC_get_size(catalog));
 							OC_apply_arg(catalog, collection_save, outfile);
 							fclose(outfile);
 							printf("Data saved\n");
