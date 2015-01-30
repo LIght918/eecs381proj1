@@ -307,7 +307,7 @@ static int OC_apply_helper(const struct Ordered_container* c_ptr, OC_apply_templ
 	{
 		int function_return;
 		void **item_ptr = c_ptr->array + i;
-		printf("%p = %d\n", c_ptr, i);
+		printf("%p = %d\n", (void*)c_ptr, i);
 		switch (apply_func)
 		{
 		case APPLY:
