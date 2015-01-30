@@ -153,15 +153,6 @@ void OC_insert(struct Ordered_container* c_ptr, const void* data_ptr)
 	OC_apply_helper(c_ptr, (OC_apply_template_fp_t)OC_take_value_from_left, NULL, APPLY_INTERNAL, result.index + 1, c_ptr->size, 1);
 	c_ptr->array[result.index] = (void*)data_ptr;
 	g_Container_items_in_use++;
-
-	{
-		int i;
-		printf("adding %p\n", data_ptr);
-		for (i = 0; i < c_ptr->size; i++)
-		{
-			printf("%d: %p\n", i, c_ptr->array[i]);
-		}
-	}
 }
 
 /* Return a pointer to an item that points to data equal to the data object pointed to by data_ptr,
@@ -311,10 +302,12 @@ Performed on range [start, end), in order depending on reverse */
 static int OC_apply_helper(const struct Ordered_container* c_ptr, OC_apply_template_fp_t afp, void* arg_ptr, apply_enum apply_func, int start, int end, int reverse)
 {
 	int i;
+	printf("starting apply helper\n");
 	for (i = (reverse ? end - 1 : start); (reverse ? i >= start : i < end); (reverse ? i-- : i++))
 	{
 		int function_return;
 		void **item_ptr = c_ptr->array + i;
+		printf("i = %d\n", i);
 		switch (apply_func)
 		{
 		case APPLY:
