@@ -6,6 +6,8 @@
 #include "p1_globals.h"
 #include <stdlib.h>
 
+#include <stdio.h>
+
 #define SIZE_FACTOR 2
 #define ALLOCATION_INCREASE 1
 #define INITIAL_ALLOCATION 3
@@ -151,6 +153,14 @@ void OC_insert(struct Ordered_container* c_ptr, const void* data_ptr)
 	OC_apply_helper(c_ptr, (OC_apply_template_fp_t)OC_take_value_from_left, NULL, APPLY_INTERNAL, result.index + 1, c_ptr->size, 1);
 	c_ptr->array[result.index] = (void*)data_ptr;
 	g_Container_items_in_use++;
+
+	{
+		printf("adding %p\n", data_ptr);
+		for (i = 0; i < c_ptr->size; i++)
+		{
+			printf("%d: %p\n", i, c_ptr->array[i]);
+		}
+	}
 }
 
 /* Return a pointer to an item that points to data equal to the data object pointed to by data_ptr,
