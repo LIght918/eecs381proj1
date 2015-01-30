@@ -320,9 +320,9 @@ int main()
 								message_and_error("Cannot delete a record that is a member of a collection!\n");
 								break;
 							}
-							OC_delete_item(library_title, item);
-							OC_delete_item(library_id, item);
 							record = OC_get_data_ptr(item);
+							OC_delete_item(library_title, item);
+							OC_delete_item(library_id, OC_find_item(library_id, record));
 							printf("Record %d %s deleted\n", get_Record_ID(record), get_Record_title(record));
 							destroy_Record(record);
 							break;
