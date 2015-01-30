@@ -508,6 +508,9 @@ int main()
 						{
 							clear_all_message(catalog, library_title, library_id);
 							printf("Done\n");
+							OC_destroy_container(catalog);
+							OC_destroy_container(library_title);
+							OC_destroy_container(library_id);
 							return 0;
 						}
 						default:
@@ -526,9 +529,6 @@ int main()
 			}
 		}
 	}
-	OC_destroy_container(catalog);
-	OC_destroy_container(library_title);
-	OC_destroy_container(library_id);
 }
 
 /* Safely acquires data ptr of an item ptr */
