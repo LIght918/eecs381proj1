@@ -353,7 +353,7 @@ static int OC_check_and_delete(const struct Ordered_container* c_ptr, void* item
 /* Checks if item_ptr's data is equal to or lesser than arg_ptr, and if so, inserts it before */
 static int OC_check_and_insert(const struct Ordered_container* c_ptr, void* item_ptr, const void* arg_ptr)
 {
-	if (c_ptr->comp_func(OC_get_data_ptr(item_ptr), arg_ptr) >= 0)
+	if (c_ptr->comp_func(arg_ptr, OC_get_data_ptr(item_ptr)) < 0)
 	{
 		OC_insert_before((struct Ordered_container*)c_ptr, item_ptr, arg_ptr);
 		return 1;
@@ -364,7 +364,7 @@ static int OC_check_and_insert(const struct Ordered_container* c_ptr, void* item
 /* Checks if item_ptr's data is equal to arg_ptr, and if so, returns item_ptr */
 static void *OC_check_and_find(const struct Ordered_container* c_ptr, void* item_ptr, OC_comp_fp_t comp_func, const void* arg_ptr)
 {
-	if (comp_func(OC_get_data_ptr(item_ptr), arg_ptr) == 0)
+	if (comp_func(arg_ptr, OC_get_data_ptr(item_ptr)) == 0)
 	{
 		return item_ptr;
 	}
