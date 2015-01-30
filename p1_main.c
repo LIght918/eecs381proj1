@@ -603,8 +603,7 @@ struct Collection * read_name_get_collection(struct Ordered_container *catalog)
 	struct Collection *collection;
 	if (scanf(SCAN_BUFFER, name) != 1)
 	{
-		/* this is not a title_read_error because the buffer needs to be cleaned */
-		message_and_error("Could not read a title!\n");
+		/* this should never happen because scanf will ignore all whitespace until the next character */
 		return NULL;
 	}
 	collection = OC_safe_data_ptr(OC_find_item_arg(catalog, name, collection_name_compare));
