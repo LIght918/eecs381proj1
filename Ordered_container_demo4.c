@@ -18,11 +18,15 @@ functions, starting with the simplest and most basic. Be sure that you test them
 #define INT_RANGE 350
 
 /* function prototypes */
-void print_as_int(char * data_ptr);
+void print_as_int(int * data_ptr);
 int compare_int(const char * data_ptr1, const char * data_ptr2);
 
-void find_and_remove(struct Ordered_container * container, char * probe);
+void find_and_remove(struct Ordered_container * container, int * probe);
+
 void demo_func(void * data_ptr, void * arg);
+void demo_func2(void * data_ptr, void * arg);
+void demo_func3(void * data_ptr);
+
 void insert(struct Ordered_container * container, int * insert);
 void print_all(struct Ordered_container * container);
 
@@ -37,7 +41,7 @@ int main(void)
 	
 	for (i = 0; i < TRIALS; i++)
 	{
-		int random = rand() % 4;
+		int random = rand() % 8;
 		switch (random)
 		{
 			case 0:
@@ -45,21 +49,38 @@ int main(void)
 			}
 			case 1:
 			{
+			}
+			case 2:
+			{
+			}
+			case 3:
+			{
 				int *new_int = malloc(sizeof(int));
 				*new_int = rand() % INT_RANGE;
 				insert(container, new_int);
 				break;
 			}
-			case 2:
+			case 4:
 			{
 				int search_int = rand() % INT_RANGE;
 				find_and_remove(container, &search_int);
 				break;
 			}
-			case 3:
+			case 5:
 			{
 				int value = rand() % INT_RANGE;
 				OC_apply_arg(container, demo_func, (void *)&value);
+				break;
+			}
+			case 6:
+			{
+				int value = rand() % INT_RANGE;
+				OC_apply_if_arg(container, demo_func2, (void *)&value);
+				break;
+			}
+			case 7:
+			{
+				OC_apply_if(container, demo_func3);
 				break;
 			}
 			default:
@@ -95,7 +116,7 @@ void print_as_int(int * data_ptr)
 
 int compare_int(const int * data_ptr1, const int * data_ptr2)
 {
-	return strcmp(data_ptr1, data_ptr2);
+	return *data_ptr2 - *data_ptr1;
 }
 
 void find_and_remove(struct Ordered_container * container, int * probe)
@@ -129,10 +150,39 @@ void print_all(struct Ordered_container * container)
 void demo_func(void * data_ptr, void * arg)
 {
 	int * int_ptr = (int *)arg;
-	if((*int_ptr + *data_ptr) % 2) /* is the arg even or odd? */
-		printf("I like this item: %s\n", (int *)data_ptr);
+	if ((*int_ptr + *((int *)data_ptr)) % 2)
+		printf("%d + %d = odd\n", (int *)data_ptr, int_ptr);
 	else
-		printf("I hate this item: %s\n", (int *)data_ptr);
+		printf("%d + %d = even\n", (int *)data_ptr, int_ptr);
+}
+
+void demo_func2(void * data_ptr, void * arg)
+{
+	int * int_ptr = (int *)arg;
+	if ((int *)data_ptr > arg)
+	{
+		printf("%d > %d\n", (int *)data_ptr, int_ptr);
+		return 1;
+	}
+	else
+	{
+		printf("%d <= %d\n", (int *)data_ptr, int_ptr);
+		return 0;
+	}
+}
+
+void demo_func3(void * data_ptr)
+{
+	if ((int *)data_ptr % 2)
+	{
+		printf("%d = odd\n", (int *)data_ptr);
+		return 1;
+	}
+	else
+	{
+		printf("%d = even\n", (int *)data_ptr);
+		return 0;
+	}
 }
 
 
