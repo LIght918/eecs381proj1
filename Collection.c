@@ -36,6 +36,7 @@ and the contained data. It discards the member list,
 but of course does not delete the Records themselves. */
 void destroy_Collection(struct Collection* collection_ptr)
 {
+	g_string_memory -= strlen(collection_ptr->name) + 1;
 	free(collection_ptr->name);
 	OC_destroy_container(collection_ptr->members);
 	free(collection_ptr);

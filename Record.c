@@ -36,6 +36,8 @@ This is the only function that frees the memory for a Record
 and the contained data. */
 void destroy_Record(struct Record* record_ptr)
 {
+	g_string_memory -= strlen(record_ptr->title) + 1;
+	g_string_memory -= strlen(record_ptr->medium) + 1;
 	free(record_ptr->title);
 	free(record_ptr->medium);
 	free(record_ptr);
