@@ -27,7 +27,7 @@ struct Record* create_Record(const char* medium, const char* title)
 	record->medium = strcpy(malloc(medium_len), medium);
 	record->title = strcpy(malloc(title_len), title);
 	record->rating = 0;
-	record->ID = next_record_id++;
+	record->ID = ++next_record_id;
 	return record;
 }
 
@@ -121,7 +121,7 @@ struct Record* load_Record(FILE* infile)
 	record->ID = id;
 	if (id > next_record_id)
 	{
-		next_record_id = id + 1;
+		next_record_id = id;
 	}
 	record->rating = rating;
 	return record;
