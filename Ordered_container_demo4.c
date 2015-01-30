@@ -231,12 +231,12 @@ int demo_func3_sub(void * data_ptr)
 
 void add_one(void * data_ptr)
 {
-	*((int*)data_ptr) = (*((int*)data_ptr) + 1) % INT_RANGE;
+	*((int*)data_ptr) = *((int*)data_ptr) + 1;
 }
 
 void sub_one(void * data_ptr)
 {
-	*((int*)data_ptr) = (*((int*)data_ptr) - 1) % INT_RANGE;
+	*((int*)data_ptr) = *((int*)data_ptr) - 1;
 }
 
 
