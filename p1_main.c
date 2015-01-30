@@ -278,11 +278,12 @@ int main()
 						case 'm': /* add record to collection */
 						{
 							struct Collection *collection = read_name_get_collection(catalog);
+							struct Record *item;
 							if (!collection)
 							{
 								break;
 							}
-							struct Record *item = read_id_get_record(library_title);
+							item = read_id_get_record(library_title);
 							if (!item)
 							{
 								break;
@@ -348,11 +349,12 @@ int main()
 						case 'm': /* delete record from collection */
 						{
 							struct Collection *collection = read_name_get_collection(catalog);
+							struct Record *item;
 							if (!collection)
 							{
 								break;
 							}
-							struct Record *item = read_id_get_record(library_title);
+							item = read_id_get_record(library_title);
 							if (!item)
 							{
 								break;
