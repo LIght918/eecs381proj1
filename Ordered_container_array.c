@@ -353,7 +353,7 @@ static int OC_apply_helper(const struct Ordered_container* c_ptr, OC_apply_templ
 			break;
 		case APPLY_INTERNAL:
 			printf("case internal\n");
-			((OC_apply_internal_fp_t)afp)(c_ptr, i);
+			((OC_apply_internal_fp_t)afp)((struct Ordered_container *)c_ptr, i);
 			break;
 		}
 	}
