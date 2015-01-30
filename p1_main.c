@@ -385,6 +385,7 @@ int main()
 								message_and_error("Cannot clear all records unless all collections are empty!\n");
 								break;
 							}
+							OC_apply(library_title, record_destroy);
 							deallocate_and_clear(library_title);
 							deallocate_and_clear(library_id);
 							reset_Record_ID_counter();
@@ -393,6 +394,7 @@ int main()
 						}
 						case 'C': /* clear catalog */
 						{
+							OC_apply(catalog, collection_destroy);
 							deallocate_and_clear(catalog);
 							printf("All collections deleted\n");
 							break;
