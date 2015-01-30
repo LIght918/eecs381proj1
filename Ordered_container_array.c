@@ -260,7 +260,7 @@ static struct Search_Result OC_binary_search(const struct Ordered_container* c_p
 		else
 		{
 			right = middle - 1;
-			result.index = right;
+			result.index = middle;
 		}
 	}
 	printf("found = %d\nindex = %d\n", result.found, result.index);
