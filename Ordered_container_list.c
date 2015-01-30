@@ -109,7 +109,6 @@ After this call, the container pointer value must not be used again. */
 void OC_destroy_container(struct Ordered_container* c_ptr)
 {
 	OC_deallocate_all(c_ptr);
-	OC_change_globals(c_ptr->size * CONTAINER_GLOBAL_MINUS_ONE);
 	g_Container_count--;
 	free(c_ptr);
 }
@@ -119,7 +118,6 @@ Caller is responsible for deleting any pointed-to data first. */
 void OC_clear(struct Ordered_container* c_ptr)
 {
 	OC_deallocate_all(c_ptr);
-	OC_change_globals(c_ptr->size * CONTAINER_GLOBAL_MINUS_ONE);
 	OC_initialize_container(c_ptr);
 }
 
@@ -432,6 +430,7 @@ static void *OC_find_helper(const struct Ordered_container* c_ptr, OC_find_fp_t 
 /* Deallocate all nodes */
 static void OC_deallocate_all(struct Ordered_container *c_ptr)
 {
+	OC_change_globals(c_ptr->size * CONTAINER_GLOBAL_MINUS_ONE);
 	OC_apply_helper(c_ptr, (OC_apply_template_fp_t)OC_deallocate_item, NULL, APPLY_INTERNAL);
 }
 

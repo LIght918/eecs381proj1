@@ -43,6 +43,9 @@ static struct Search_Result OC_binary_search(const struct Ordered_container* c_p
 /* Initialize the container to default values */
 static void OC_initialize_container(struct Ordered_container* c_ptr);
 
+/* Deallocate all items in the container and the array the container uses */
+static void OC_deallocate_all(struct Ordered_container* c_ptr);
+
 /* Reallocate array */
 static void OC_reallocate_array(struct Ordered_container* c_ptr);
 
@@ -84,9 +87,7 @@ deleting all pointed-to data before calling this function.
 After this call, the container pointer value must not be used again. */
 void OC_destroy_container(struct Ordered_container* c_ptr)
 {
-	g_Container_items_in_use -= c_ptr->size;
-	g_Container_items_allocated -= c_ptr->allocation;
-	free(c_ptr->array);
+	OC_deallocate_all(c_ptr);
 	free(c_ptr);
 	g_Container_count--;
 }
@@ -95,9 +96,7 @@ void OC_destroy_container(struct Ordered_container* c_ptr)
 Caller is responsible for deleting any pointed-to data first. */
 void OC_clear(struct Ordered_container* c_ptr)
 {
-	g_Container_items_in_use -= c_ptr->size;
-	g_Container_items_allocated -= c_ptr->allocation;
-	free(c_ptr->array);
+	OC_deallocate_all(c_ptr);
 	OC_initialize_container(c_ptr);
 }
 
@@ -263,6 +262,14 @@ static void OC_initialize_container(struct Ordered_container* c_ptr)
 	g_Container_items_allocated += c_ptr->allocation;
 	c_ptr->size = 0;
 	c_ptr->array = calloc(c_ptr->allocation, sizeof(void**));
+}
+
+/* Deallocate all items in the container and the array the container uses */
+static void OC_deallocate_all(struct Ordered_container* c_ptr)
+{
+	g_Container_items_in_use -= c_ptr->size;
+	g_Container_items_allocated -= c_ptr->allocation;
+	free(c_ptr->array);
 }
 
 /* Reallocate array */
