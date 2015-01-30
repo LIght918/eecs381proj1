@@ -104,6 +104,7 @@ int main(void)
 			}
 			case 11:
 			{
+				int value = rand() % INT_RANGE;
 				OC_apply_if_arg(container, demo_func2_add, (void *)&value);
 				break;
 			}
