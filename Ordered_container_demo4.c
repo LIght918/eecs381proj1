@@ -87,15 +87,9 @@ int main(void)
 			{
 				break;
 			}
+
+			print_all(container);
 		}
-	}
-	
-	/* demo another apply function - note function pointer cast is not needed for this one */
-	{
-		int odd_or_even_value = 42;
-		OC_apply_arg(container, demo_func, (void *)&odd_or_even_value);
-		odd_or_even_value = 3;
-		OC_apply_arg(container, demo_func, (void *)&odd_or_even_value);
 	}
 
 	OC_clear(container);
