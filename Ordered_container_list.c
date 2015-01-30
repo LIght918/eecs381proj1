@@ -194,6 +194,7 @@ void OC_insert(struct Ordered_container* c_ptr, const void* data_ptr)
 	if (c_ptr->size == 0)
 	{
 		struct LL_Node *new_node = malloc(sizeof(struct LL_Node));
+		OC_initialize_node(new_node, NULL, NULL, data_ptr);
 		c_ptr->first = new_node;
 		c_ptr->last = new_node;
 	}
