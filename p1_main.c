@@ -329,8 +329,8 @@ int main()
 							{
 								break;
 							}
-							OC_delete_item(catalog, item);
 							collection = OC_get_data_ptr(item);
+							OC_delete_item(catalog, item);
 							printf("Collection %s deleted\n", get_Collection_name(collection));
 							destroy_Collection(collection);
 							break;
