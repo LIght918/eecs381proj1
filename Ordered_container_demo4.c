@@ -38,6 +38,7 @@ int main(void)
 {		
 	struct Ordered_container * container;
 	int i;
+	int size = 0;
 	
 	container = OC_create_container((int (*)(const void *, const void *))compare_int);
 
@@ -46,7 +47,6 @@ int main(void)
 	for (i = 0; i < TRIALS; i++)
 	{
 		int random = rand() % 12;
-		int size = 0;
 		switch (random)
 		{
 			case 0:
