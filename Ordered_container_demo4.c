@@ -24,8 +24,8 @@ int compare_int(const char * data_ptr1, const char * data_ptr2);
 void find_and_remove(struct Ordered_container * container, int * probe);
 
 void demo_func(void * data_ptr, void * arg);
-void demo_func2(void * data_ptr, void * arg);
-void demo_func3(void * data_ptr);
+int demo_func2(void * data_ptr, void * arg);
+int demo_func3(void * data_ptr);
 
 void insert(struct Ordered_container * container, int * insert);
 void print_all(struct Ordered_container * container);
@@ -156,7 +156,7 @@ void demo_func(void * data_ptr, void * arg)
 		printf("%d + %d = even\n", (int *)data_ptr, int_ptr);
 }
 
-void demo_func2(void * data_ptr, void * arg)
+int demo_func2(void * data_ptr, void * arg)
 {
 	int * int_ptr = (int *)arg;
 	if ((int *)data_ptr > arg)
@@ -171,7 +171,7 @@ void demo_func2(void * data_ptr, void * arg)
 	}
 }
 
-void demo_func3(void * data_ptr)
+int demo_func3(void * data_ptr)
 {
 	if ((int *)data_ptr % 2)
 	{
