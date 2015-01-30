@@ -295,14 +295,14 @@ static void OC_reallocate_array(struct Ordered_container* c_ptr)
 /* Grabs the data ptr from the item directly preceding this item*/
 static int OC_take_value_from_left(void* item_ptr)
 {
-	item_ptr = item_ptr - 1;
+	item_ptr = OC_get_data_ptr((void**)item_ptr - 1);
 	return 0;
 }
 
 /* Grabs the data ptr from the item directly after this item*/
 static int OC_take_value_from_right(void* item_ptr)
 {
-	item_ptr = item_ptr + 1;
+	item_ptr = OC_get_data_ptr((void**)item_ptr + 1);
 	return 0;
 }
 
