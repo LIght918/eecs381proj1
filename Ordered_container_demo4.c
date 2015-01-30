@@ -19,7 +19,7 @@ functions, starting with the simplest and most basic. Be sure that you test them
 
 /* function prototypes */
 void print_as_int(int * data_ptr);
-int compare_int(const char * data_ptr1, const char * data_ptr2);
+int compare_int(const int * data_ptr1, const int * data_ptr2);
 
 void find_and_remove(struct Ordered_container * container, int * probe);
 
@@ -159,7 +159,7 @@ void demo_func(void * data_ptr, void * arg)
 int demo_func2(void * data_ptr, void * arg)
 {
 	int * int_ptr = (int *)arg;
-	if ((int *)data_ptr > arg)
+	if (*((int *)data_ptr) > *((int *)arg))
 	{
 		printf("%d > %d\n", (int *)data_ptr, int_ptr);
 		return 1;
@@ -173,7 +173,7 @@ int demo_func2(void * data_ptr, void * arg)
 
 int demo_func3(void * data_ptr)
 {
-	if ((int *)data_ptr % 2)
+	if (*((int *)data_ptr) % 2)
 	{
 		printf("%d = odd\n", (int *)data_ptr);
 		return 1;
