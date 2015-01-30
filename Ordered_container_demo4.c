@@ -87,9 +87,9 @@ int main(void)
 			{
 				break;
 			}
-
-			print_all(container);
 		}
+
+		print_all(container);
 	}
 
 	OC_clear(container);
@@ -105,7 +105,7 @@ int main(void)
 
 void print_as_int(int * data_ptr)
 {
-	printf("%d\n", data_ptr);
+	printf("%d\n", *data_ptr);
 }
 
 int compare_int(const int * data_ptr1, const int * data_ptr2)
@@ -145,9 +145,9 @@ void demo_func(void * data_ptr, void * arg)
 {
 	int * int_ptr = (int *)arg;
 	if ((*int_ptr + *((int *)data_ptr)) % 2)
-		printf("%d + %d = odd\n", (int *)data_ptr, int_ptr);
+		printf("%d + %d = odd\n", *((int *)data_ptr), *int_ptr);
 	else
-		printf("%d + %d = even\n", (int *)data_ptr, int_ptr);
+		printf("%d + %d = even\n", *((int *)data_ptr), *int_ptr);
 }
 
 int demo_func2(void * data_ptr, void * arg)
@@ -155,12 +155,12 @@ int demo_func2(void * data_ptr, void * arg)
 	int * int_ptr = (int *)arg;
 	if (*((int *)data_ptr) > *((int *)arg))
 	{
-		printf("%d > %d\n", (int *)data_ptr, int_ptr);
+		printf("%d > %d\n", *((int *)data_ptr), *int_ptr);
 		return 1;
 	}
 	else
 	{
-		printf("%d <= %d\n", (int *)data_ptr, int_ptr);
+		printf("%d <= %d\n", *((int *)data_ptr), *int_ptr);
 		return 0;
 	}
 }
@@ -169,12 +169,12 @@ int demo_func3(void * data_ptr)
 {
 	if (*((int *)data_ptr) % 2)
 	{
-		printf("%d = odd\n", (int *)data_ptr);
+		printf("%d = odd\n", *((int *)data_ptr));
 		return 1;
 	}
 	else
 	{
-		printf("%d = even\n", (int *)data_ptr);
+		printf("%d = even\n", *((int *)data_ptr));
 		return 0;
 	}
 }
