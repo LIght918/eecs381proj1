@@ -100,7 +100,7 @@ int main()
 	while (1)
 	{
 		printf("\nEnter command: ");
-		if (scanf("%*[ \n\t]%c%*[ \n\t]%c", &action, &object) == 2)
+		if (scanf(" %c %c", &action, &object) == 2)
 		{
 			switch (action)
 			{
