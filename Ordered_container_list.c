@@ -6,6 +6,8 @@
 #include "p1_globals.h"
 #include <stdlib.h>
 
+#include <stdio.h>
+
 #define CONTAINER_GLOBAL_ADD_ONE 1
 #define CONTAINER_GLOBAL_MINUS_ONE -1
 
@@ -165,7 +167,6 @@ void OC_delete_item(struct Ordered_container* c_ptr, void* item_ptr)
 		{
 			c_ptr->first = node_ptr->next;
 		}
-
 		if (node_ptr->next != NULL)
 		{
 			node_ptr->next->prev = node_ptr->prev;
@@ -190,12 +191,22 @@ the comparison function, the order of the new item relative to the existing item
 This function will not modify the pointed-to data. */
 void OC_insert(struct Ordered_container* c_ptr, const void* data_ptr)
 {
-	int is_inserted = OC_apply_helper(c_ptr, (OC_apply_template_fp_t)OC_check_and_insert, (void*)data_ptr, APPLY_INTERNAL);
-	if (is_inserted == 0)
+	if (c_ptr->size == 0)
 	{
-		OC_insert_after(c_ptr, c_ptr->last, data_ptr);
+		struct LL_Node *new_node = malloc(sizeof(struct LL_Node));
+		c_ptr->first = new_node;
+		c_ptr->last = new_node;
+	}
+	else
+	{
+		int is_inserted = OC_apply_helper(c_ptr, (OC_apply_template_fp_t)OC_check_and_insert, (void*)data_ptr, APPLY_INTERNAL);
+		if (is_inserted == 0)
+		{
+			OC_insert_after(c_ptr, c_ptr->last, data_ptr);
+		}
 	}
 	OC_change_globals(CONTAINER_GLOBAL_ADD_ONE);
+	c_ptr->size++;
 }
 
 /* Return a pointer to an item that points to data equal to the data object pointed to by data_ptr,
@@ -363,6 +374,7 @@ static void *OC_check_and_find(const struct Ordered_container* c_ptr, void* item
 static int OC_apply_helper(const struct Ordered_container* c_ptr, OC_apply_template_fp_t afp, void* arg_ptr, apply_enum apply_func)
 {
 	struct LL_Node *node_ptr = c_ptr->first;
+	printf("beginning apply helper\n");
 	while (node_ptr != NULL)
 	{
 		struct LL_Node *next_node_ptr = node_ptr->next;
