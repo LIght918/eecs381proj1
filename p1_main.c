@@ -61,6 +61,9 @@ void flush_stream(void);
 /* Prints message and flushes */
 void message_and_error(char * message);
 
+/* Prints message and flushes */
+void message_and_error_noflush(char * message);
+
 /* Action Object input error message */
 void action_object_input_error(void);
 
@@ -668,7 +671,16 @@ void flush_stream(void)
 void message_and_error(char * message)
 {
 	printf(message);
-	flush_stream();
+	if (flush)
+	{
+		flush_stream();
+	}
+}
+
+/* Prints message and flushes */
+void message_and_error_noflush(char * message)
+{
+	printf(message);
 }
 
 /* Action Object input error message */
@@ -680,7 +692,7 @@ void action_object_input_error(void)
 /* Title read error message */
 void title_read_error(void)
 {
-	message_and_error("Could not read a title!\n");
+	message_and_error_noflush("Could not read a title!\n");
 }
 
 /* Integer read error message */
