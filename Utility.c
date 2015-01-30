@@ -4,8 +4,6 @@
 #include <string.h>
 #include "p1_globals.h"
 
-#include <stdio.h>
-
 /* Print a record */
 void record_print(void* record)
 {
@@ -15,28 +13,24 @@ void record_print(void* record)
 /* Compare records by their titles */
 int record_compare_title(const void* first_record, const void* second_record)
 {
-	printf("rec com title\n");
 	return strcmp(get_Record_title((const struct Record *)first_record), get_Record_title((const struct Record *)second_record));
 }
 
 /* Compare records by their ids */
 int record_compare_id(const void* first_record, const void* second_record)
 {
-	printf("rec com id\n");
 	return get_Record_ID((const struct Record *)first_record) - get_Record_ID((const struct Record *)second_record);
 }
 
 /* Compares a record's title with the given title */
 int record_title_compare(const void* title, const void* record)
 {
-	printf("rec title com\n");
 	return strcmp((const char*)title, get_Record_title((const struct Record *)record));
 }
 
 /* Compares a record's id with the given id */
 int record_id_compare(const void* id, const void* record)
 {
-	printf("rec id com\n");
 	return *((int *)id) - get_Record_ID((const struct Record *)record);
 }
 

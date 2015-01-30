@@ -6,8 +6,6 @@
 #include "p1_globals.h"
 #include <stdlib.h>
 
-#include <stdio.h>
-
 #define CONTAINER_GLOBAL_ADD_ONE 1
 #define CONTAINER_GLOBAL_MINUS_ONE -1
 
@@ -375,7 +373,6 @@ static void *OC_check_and_find(const struct Ordered_container* c_ptr, void* item
 static int OC_apply_helper(const struct Ordered_container* c_ptr, OC_apply_template_fp_t afp, void* arg_ptr, apply_enum apply_func)
 {
 	struct LL_Node *node_ptr = c_ptr->first;
-	printf("beginning apply helper\n");
 	while (node_ptr != NULL)
 	{
 		struct LL_Node *next_node_ptr = node_ptr->next;

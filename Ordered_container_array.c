@@ -143,28 +143,14 @@ This function will not modify the pointed-to data. */
 void OC_insert(struct Ordered_container* c_ptr, const void* data_ptr)
 {
 	struct Search_Result result = OC_binary_search(c_ptr, data_ptr, c_ptr->comp_fun);
-	printf("result index = %d\n", result.index);
 	if (c_ptr->size == c_ptr->allocation)
 	{
-		printf("need to allocate\n");
 		OC_reallocate_array(c_ptr);
-		printf("allocated\n");
 	}
-	printf("done with allocation\n");
 	c_ptr->size++;
 	OC_apply_helper(c_ptr, (OC_apply_template_fp_t)OC_take_value_from_left, NULL, APPLY_INTERNAL, result.index + 1, c_ptr->size, 1);
-	printf("apply helper done\n");
 	c_ptr->array[result.index] = (void*)data_ptr;
-	printf("inserted into array\n");
 	g_Container_items_in_use++;
-
-	{
-		int i;
-		for (i = 0; i < c_ptr->size; i++)
-		{
-			printf("%d: %p\n", i, c_ptr->array[i]);
-		}
-	}
 }
 
 /* Return a pointer to an item that points to data equal to the data object pointed to by data_ptr,
@@ -244,16 +230,12 @@ static struct Search_Result OC_binary_search(const struct Ordered_container* c_p
 	int right = c_ptr->size - 1;
 	int middle = 0;
 	int comparison;
-	printf("binary searching\n");
-	printf("data ptr = %p\n", data_ptr);
 	result.found = 0;
 	result.index = 0;
 	while (left <= right)
 	{
 		middle = (left + right) / 2;
-		printf("left = %d\nright = %d\nmiddle = %d\n", left, right, middle);
 		comparison = comp_fun(data_ptr, c_ptr->array[middle]);
-		printf("comparison = %d\n", comparison);
 		if (comparison > 0)
 		{
 			left = middle + 1;
@@ -271,7 +253,6 @@ static struct Search_Result OC_binary_search(const struct Ordered_container* c_p
 			result.index = middle;
 		}
 	}
-	printf("found = %d\nindex = %d\n", result.found, result.index);
 	return result;
 }
 
@@ -319,20 +300,16 @@ Performed on range [start, end), in order depending on reverse */
 static int OC_apply_helper(const struct Ordered_container* c_ptr, OC_apply_template_fp_t afp, void* arg_ptr, apply_enum apply_func, int start, int end, int reverse)
 {
 	int i;
-	printf("beginning apply helper\n");
 	for (i = (reverse ? end - 1 : start); (reverse ? i >= start : i < end); (reverse ? i-- : i++))
 	{
 		int function_return;
 		void **item_ptr = c_ptr->array + i;
-		printf("i = %d\n", i);
 		switch (apply_func)
 		{
 		case APPLY:
-			printf("case apply\n");
 			((OC_apply_fp_t)afp)(OC_get_data_ptr(item_ptr));
 			break;
 		case APPLY_IF:
-			printf("case apply if\n");
 			function_return = ((OC_apply_if_fp_t)afp)(OC_get_data_ptr(item_ptr));
 			if (function_return)
 			{
@@ -340,11 +317,9 @@ static int OC_apply_helper(const struct Ordered_container* c_ptr, OC_apply_templ
 			}
 			break;
 		case APPLY_ARG:
-			printf("case apply arg\n");
 			((OC_apply_arg_fp_t)afp)(OC_get_data_ptr(item_ptr), arg_ptr);
 			break;
 		case APPLY_ARG_IF:
-			printf("case apply arg if\n");
 			function_return = ((OC_apply_if_arg_fp_t)afp)(OC_get_data_ptr(item_ptr), arg_ptr);
 			if (function_return)
 			{
@@ -352,7 +327,6 @@ static int OC_apply_helper(const struct Ordered_container* c_ptr, OC_apply_templ
 			}
 			break;
 		case APPLY_INTERNAL:
-			printf("case internal\n");
 			((OC_apply_internal_fp_t)afp)((struct Ordered_container *)c_ptr, i);
 			break;
 		}
