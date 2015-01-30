@@ -463,11 +463,16 @@ int main()
 								OC_insert(library_title, record);
 								OC_insert(library_id, record);
 							}
-							if (records > 0 || fscanf(infile, "%d\n", &collections) != 1)
+							if (records > 0)
 							{
 								file_invalid_error(infile);
 								clear_all(catalog, library_title, library_id);
 								break;
+							}
+							if (fscanf(infile, "%d\n", &collections) != 1)
+							{
+								file_invalid_error(infile);
+								clear_all(catalog, library_title, library_id);
 							}
 							for (; collections > 0; collections--)
 							{
