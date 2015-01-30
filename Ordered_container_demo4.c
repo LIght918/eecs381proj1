@@ -161,7 +161,7 @@ int demo_func2(void * data_ptr, void * arg)
 	if (*((int *)data_ptr) > *((int *)arg))
 	{
 		printf("%d > %d\n", *((int *)data_ptr), *int_ptr);
-		return 1;
+		return *((int *)data_ptr);
 	}
 	else
 	{
@@ -175,7 +175,7 @@ int demo_func3(void * data_ptr)
 	if (*((int *)data_ptr) % 2)
 	{
 		printf("%d = odd\n", *((int *)data_ptr));
-		return 1;
+		return *((int *)data_ptr);
 	}
 	else
 	{
