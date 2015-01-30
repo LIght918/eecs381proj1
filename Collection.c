@@ -74,9 +74,10 @@ int is_Collection_member_present(const struct Collection* collection_ptr, const 
 /* Remove a member; return non-zero if not present, zero if was present. */
 int remove_Collection_member(struct Collection* collection_ptr, const struct Record* record_ptr)
 {
-	if (is_Collection_member_present(collection_ptr, record_ptr))
+	void *item = OC_find_item(collection_ptr->members, record_ptr);
+	if (item)
 	{
-		OC_delete_item(collection_ptr->members, OC_find_item(collection_ptr->members, record_ptr));
+		OC_delete_item(collection_ptr->members, item);
 		return 0;
 	}
 	return 1;
